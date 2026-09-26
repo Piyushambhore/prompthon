@@ -341,7 +341,7 @@ The Android UI shows **green verified badges** for DigiLocker-sourced fields and
 
 ---
 
-## Farmer Workflow
+## Farmer Workflow 
 
 ### Why a Dedicated Farmer Flow?
 India has **15 crore+ farmer families**. Farmers face unique challenges:
@@ -358,7 +358,7 @@ India has **15 crore+ farmer families**. Farmers face unique challenges:
 | Marginal | < 2.47 acres (1 hectare) | Rs.1,00,000/year |
 | Small | 2.47 – 4.94 acres | Rs.1,50,000/year |
 | Semi-Medium | 4.94 – 9.88 acres | Rs.2,50,000/year |
-| Medium | 9.88 – 24.7 acres | Rs.5,00,000/year |
+| Medium | 9.88 – 24.7 acres | Rs.5,00,000/year | 
 | Large | > 24.7 acres | Rs.10,00,000/year |
 
 ### Farmer Profile Flow
@@ -521,7 +521,7 @@ The architecture is designed for horizontal scaling. The eligibility engine eval
 | **Human-in-the-Loop Updates** | Gazette changes are never auto-applied — a policy officer must approve. Prevents AI hallucinations from corrupting scheme data. |
 | **Comprehensive Audit Trail** | Every eligibility check, profile build, and scheme update is logged with timestamps. |
 | **Fuzzy Document Matching** | "7/12 extract" matches "Land Records", "Passbook" matches "Bank Passbook". Reduces friction for rural users. |
-| **Production-Ready CORS** | Whitelist-based, no wildcards. Rate limiting, input validation, payload size limits. |
+| **Production-Ready CORS** | Whitelist-based, no wildcards. Rate limiting, input validation, payload size limits. | 
 
 ### Cons / Current Limitations
 

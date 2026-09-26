@@ -8,8 +8,8 @@ const { requestTimeout } = require('./middleware/timeout');
 const app = express();
 
 // Configure CORS restricted to http://localhost:3000
-const allowedOrigins = process.env.CORS_ORIGIN 
-  ? process.env.CORS_ORIGIN.split(',').map(s => s.trim()) 
+const allowedOrigins = process.env.CORS_ORIGIN
+  ? process.env.CORS_ORIGIN.split(',').map(s => s.trim())
   : ['http://localhost:3000'];
 
 app.use(cors({
