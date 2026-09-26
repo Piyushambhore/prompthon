@@ -28,6 +28,13 @@ fun Route.schemeRoutes(
             call.respond(HttpStatusCode.OK, schemes)
         }
 
+        // ── GET /api/schemes/state-portals ─────────────────────────
+        get("/schemes/state-portals") {
+            val state = call.request.queryParameters["state"]
+            val portals = repository.findStatePortals(state)
+            call.respond(HttpStatusCode.OK, portals)
+        }
+
         // ── GET /api/schemes/{schemeId} ────────────────────────────
         get("/schemes/{schemeId}") {
             val schemeId = call.parameters["schemeId"]

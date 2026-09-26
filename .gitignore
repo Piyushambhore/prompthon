@@ -1,0 +1,24 @@
+# Environment secrets
+.env
+.env.local
+
+# Node
+node_modules/
+npm-debug.log*
+
+# Gradle / Java
+.gradle/
+build/
+.idea/
+*.iml
+out/
+*.class
+*.jar
+
+# Database
+data/
+*.db
+
+# OS
+.DS_Store
+Thumbs.db

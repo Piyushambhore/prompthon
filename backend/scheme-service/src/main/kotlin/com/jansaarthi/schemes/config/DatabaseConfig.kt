@@ -28,9 +28,35 @@ object DatabaseConfig {
             return
         }
 
+        // Parse and normalize cloud PostgreSQL connection URIs (e.g. Supabase, Neon, Render)
+        var targetUrl = databaseUrl
+        var targetUser = user
+        var targetPassword = password
+
+        if (databaseUrl.startsWith("postgres://") || databaseUrl.startsWith("postgresql://")) {
+            try {
+                val uri = java.net.URI(databaseUrl)
+                val userInfo = uri.userInfo
+                if (!userInfo.isNullOrBlank()) {
+                    val parts = userInfo.split(":")
+                    if (targetUser.isBlank() || targetUser == "postgres") targetUser = parts[0]
+                    if (parts.size > 1 && (targetPassword.isBlank() || targetPassword == "postgres")) targetPassword = parts[1]
+                }
+                val host = uri.host
+                val port = if (uri.port != -1) ":${uri.port}" else ""
+                val path = uri.path ?: ""
+                val query = if (!uri.query.isNullOrBlank()) "?${uri.query}" else ""
+                targetUrl = "jdbc:postgresql://$host$port$path$query"
+            } catch (e: Exception) {
+                targetUrl = "jdbc:postgresql://" + databaseUrl.removePrefix("postgres://").removePrefix("postgresql://")
+            }
+        } else if (!databaseUrl.startsWith("jdbc:")) {
+            targetUrl = "jdbc:postgresql://$databaseUrl"
+        }
+
         try {
-            logger.info("Connecting to PostgreSQL at $databaseUrl")
-            connectAndCreate(databaseUrl, "org.postgresql.Driver", user, password, "TRANSACTION_REPEATABLE_READ")
+            logger.info("Connecting to PostgreSQL at $targetUrl (user: $targetUser)")
+            connectAndCreate(targetUrl, "org.postgresql.Driver", targetUser, targetPassword, "TRANSACTION_READ_COMMITTED")
             logger.info("Connected to PostgreSQL successfully")
         } catch (e: Exception) {
             logger.warn("PostgreSQL connection failed (${e.message ?: "Host unreachable"}).")

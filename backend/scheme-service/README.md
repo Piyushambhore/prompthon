@@ -2,11 +2,12 @@
 
 > **Ktor backend** that helps citizens discover government schemes they may
 > be eligible for, check their document readiness, and understand official
-> government notices — all from a single API.
+> government notices — with direct **DigiLocker integration** and a dedicated
+> **Farmer workflow** — all from a single unified API.
 
 > [!WARNING]
 > **DEMO DATA** — The scheme dataset shipped with this prototype is for
-> demonstration purposes only.  Before any public deployment, replace
+> demonstration purposes only. Before any public deployment, replace
 > the demo data in `DatabaseSeeder.kt` with verified information sourced
 > directly from official government portals.
 
@@ -16,33 +17,46 @@
 
 ```mermaid
 graph TB
-    subgraph Client
+    subgraph Client["Citizen Frontend"]
         A["📱 Android App<br/>Kotlin + Jetpack Compose"]
     end
 
     A -->|"REST / HTTPS"| API
 
-    subgraph Backend["Ktor Backend"]
-        API["Routes / Controllers"]
+    subgraph Backend["JanSaarthi Ktor Backend (Port 8080)"]
+        API["Routes & API Layer"]
 
+        API --> PS["Profile<br/>Service"]
+        API --> DLS["DigiLocker<br/>Service"]
+        API --> FS["Farmer<br/>Service"]
         API --> ES["Eligibility<br/>Service"]
         API --> DS["Document<br/>Service"]
         API --> EXS["Explanation<br/>Service"]
+
+        PS --> DLS
+        PS --> FS
+        PS --> ES
+        PS --> DS
+
+        DLS -.->|"OAuth 2.0 / Pull API"| DLAPI["🇮🇳 DigiLocker Partner API<br/>(eAadhaar, Caste, Income Certs)"]
+        FS -.->|"Beneficiary API"| PMK["🌾 PM-KISAN & State Land Portals<br/>(7/12 Extract, KCC, DBT)"]
 
         ES --> SR["Scheme<br/>Repository"]
         DS --> DR["Document<br/>Repository"]
 
         EXS --> AIP["AIProvider<br/>«interface»"]
-
         AIP --> OAI["OpenAI<br/>Provider"]
         AIP --> RBP["RuleBased<br/>Provider"]
 
-        SR --> DB[(PostgreSQL)]
+        SR --> DB[("PostgreSQL / Embedded H2")]
         DR --> DB
     end
 
     style A fill:#1a73e8,color:#fff,stroke:none
     style API fill:#34a853,color:#fff,stroke:none
+    style PS fill:#0288d1,color:#fff,stroke:none
+    style DLS fill:#512da8,color:#fff,stroke:none
+    style FS fill:#388e3c,color:#fff,stroke:none
     style ES fill:#ea4335,color:#fff,stroke:none
     style DS fill:#fbbc04,color:#000,stroke:none
     style EXS fill:#ea4335,color:#fff,stroke:none
@@ -52,16 +66,21 @@ graph TB
     style OAI fill:#7b1fa2,color:#fff,stroke:none
     style RBP fill:#7b1fa2,color:#fff,stroke:none
     style DB fill:#0d652d,color:#fff,stroke:none
+    style DLAPI fill:#455a64,color:#fff,stroke:none
+    style PMK fill:#2e7d32,color:#fff,stroke:none
 ```
 
-### 4 Core Responsibilities
+### Core Responsibilities
 
 | # | Responsibility | Service | Endpoint |
 |---|----------------|---------|----------|
-| 1 | **Eligibility** — "Which schemes may apply to me?" | `EligibilityService` | `POST /api/schemes/check-eligibility` |
-| 2 | **Documents** — "What do I have and what's missing?" | `DocumentService` | `POST /api/documents/check-readiness` |
-| 3 | **Explanation** — "What does this government notice mean?" | `ExplanationService` → `AIProvider` | `POST /api/explain` |
-| 4 | **Scheme Data** — "What are the official requirements?" | `SchemeRepository` | `GET /api/schemes/{id}` |
+| 1 | **DigiLocker Auth & Docs** — Auto-fetch authentic citizen certificates | `DigiLockerService` | `GET /api/profile/digilocker/*` |
+| 2 | **Farmer Workflow** — Landholdings, PM-KISAN, KCC & DBT status | `FarmerService` | `POST /api/profile/farmer` |
+| 3 | **Unified Profile & Readiness** — End-to-end check across modes | `ProfileService` | `POST /api/profile/check-eligibility` |
+| 4 | **Eligibility Engine** — Transparent deterministic rule matching | `EligibilityService` | `POST /api/schemes/check-eligibility` |
+| 5 | **Document Readiness** — Compare available docs & compute % | `DocumentService` | `POST /api/documents/check-readiness` |
+| 6 | **Notice Explanation** — Simplify official rejection letters & notices | `ExplanationService` → `AIProvider` | `POST /api/explain` |
+| 7 | **Scheme Discovery** — Filterable catalog of central & state welfare | `SchemeRepository` | `GET /api/schemes` |
 
 ---
 
@@ -71,23 +90,17 @@ graph TB
 |---------------|---------|
 | JDK           | 17+     |
 | Gradle        | 8.x     |
-| PostgreSQL    | 14+     |
+| PostgreSQL    | 14+ (or zero-setup embedded H2 fallback) |
 
 ---
 
 ## Quick Start
 
-### 1. Create a PostgreSQL database
-
-```sql
-CREATE DATABASE jansaarthi;
-```
-
-### 2. Configure environment variables
+### 1. Configure environment variables (optional)
 
 ```bash
 cp .env.example .env
-# Edit .env with your actual database credentials
+# Edit .env with your actual database credentials if using external PostgreSQL
 ```
 
 | Variable           | Description                            | Default                                      |
@@ -98,7 +111,9 @@ cp .env.example .env
 | `DATABASE_PASSWORD`| PostgreSQL password                    | `postgres`                                   |
 | `AI_API_KEY`       | Optional AI key for `/api/explain`     | *(empty — uses rule-based fallback)*         |
 
-### 3. Build & run
+> **Note**: If PostgreSQL is not running locally, the server **automatically falls back to an embedded H2 database** in PostgreSQL compatibility mode, initializing and pre-seeding all 22 schemes immediately.
+
+### 2. Build & run
 
 ```bash
 # Windows
@@ -116,94 +131,128 @@ The server starts on **http://localhost:8080**.
 
 | Method | Path                                  | Description                                         |
 |--------|---------------------------------------|-----------------------------------------------------|
-| GET    | `/health`                             | Health check                                        |
+| GET    | `/health`                             | System health check                                 |
 | GET    | `/api/schemes`                        | List schemes (`?state=` and `?category=` filters)   |
-| GET    | `/api/schemes/{schemeId}`             | Full details for a single scheme                    |
-| POST   | `/api/schemes/check-eligibility`      | Check which schemes match a user profile            |
-| POST   | `/api/documents/check-readiness`      | Check document readiness for a scheme               |
-| POST   | `/api/documents/check-readiness/bulk` | Check readiness across multiple schemes             |
+| GET    | `/api/schemes/state-portals`          | Official state portals directory (`?state=` filter) |
+| GET    | `/api/schemes/{schemeId}`             | Full details and eligibility criteria for a scheme  |
+| POST   | `/api/schemes/check-eligibility`      | Direct citizen demographic eligibility check       |
+| POST   | `/api/documents/check-readiness`      | Check document readiness for a single scheme        |
+| POST   | `/api/documents/check-readiness/bulk` | Check readiness across multiple schemes in bulk     |
 | GET    | `/api/documents/required/{schemeId}`  | List required documents for a scheme                |
-| POST   | `/api/explain`                        | Explain an official government notice               |
+| POST   | `/api/explain`                        | Explain an official government notice / letter      |
+| GET    | `/api/profile/digilocker/auth`        | Generate DigiLocker OAuth authorization URL         |
+| POST   | `/api/profile/digilocker/callback`    | Exchange authorization code for access token        |
+| GET    | `/api/profile/digilocker/documents`   | Pull citizen's verified documents from DigiLocker  |
+| POST   | `/api/profile/farmer`                 | Build farmer profile with PM-KISAN and land status  |
+| POST   | `/api/profile/build`                  | Build unified profile (`manual`, `digilocker`, `farmer`) |
+| POST   | `/api/profile/check-eligibility`      | **End-to-End**: Build profile + Match + Doc Readiness |
 
 ---
 
-## Testing with cURL
+## Testing with cURL / PowerShell
 
-### Health check
+### 1. Health check
 
 ```bash
 curl http://localhost:8080/health
 ```
 
-### List all schemes
+### 2. State Portals Directory
 
 ```bash
+# List all 17 registered official state portals
+curl http://localhost:8080/api/schemes/state-portals
+
+# Filter portals by state (e.g. Maharashtra: MahaDBT, Aaple Sarkar, MahaBhumi, State Govt)
+curl "http://localhost:8080/api/schemes/state-portals?state=Maharashtra"
+```
+
+### 3. Scheme Discovery & State Filtering
+
+```bash
+# All 35 pre-seeded welfare schemes
 curl http://localhost:8080/api/schemes
+
+# Filter schemes for Karnataka (Central + Karnataka specific)
+curl "http://localhost:8080/api/schemes?state=Karnataka"
 ```
 
-### Filter schemes by state
+### 2. DigiLocker OAuth Flow
 
 ```bash
-curl "http://localhost:8080/api/schemes?state=Maharashtra"
+# Step 1: Citizen taps "Connect DigiLocker" — App requests authorization URL
+curl http://localhost:8080/api/profile/digilocker/auth
+
+# Step 2: User consents — App sends authorization code to callback endpoint
+curl -X POST http://localhost:8080/api/profile/digilocker/callback \
+  -H "Content-Type: application/json" \
+  -d '{"authorizationCode": "auth_code_12345", "state": "session_state_xyz"}'
+
+# Step 3: Fetch verified documents using access token
+curl http://localhost:8080/api/profile/digilocker/documents?token=dl_token_demo
 ```
 
-### Filter schemes by category
+### 3. Farmer-Specific Flow
 
 ```bash
-curl "http://localhost:8080/api/schemes?category=education"
-```
-
-### Get scheme details
-
-```bash
-curl http://localhost:8080/api/schemes/SCH001
-```
-
-### Check eligibility
-
-```bash
-curl -X POST http://localhost:8080/api/schemes/check-eligibility \
+curl -X POST http://localhost:8080/api/profile/farmer \
   -H "Content-Type: application/json" \
   -d '{
-    "age": 19,
+    "aadhaarLinked": true,
+    "pmKisanBeneficiary": true,
+    "landOwnership": {
+      "hasLand": true,
+      "landAreaAcres": 1.5,
+      "landType": "irrigated"
+    },
+    "kisanCreditCard": true,
+    "state": "Maharashtra",
+    "district": "Kolhapur"
+  }'
+```
+
+*Response classifies farmer as **marginal** (< 2.47 acres), confirms active PM-KISAN DBT status, pulls Land Record (7/12 extract), KCC, and recommends targeted schemes (PM-KISAN, PM Fasal Bima, KCC, MGNREGA, PM Ujjwala, Ayushman Bharat).*
+
+### 4. End-to-End Profile Eligibility (Farmer Mode)
+
+```bash
+curl -X POST http://localhost:8080/api/profile/check-eligibility \
+  -H "Content-Type: application/json" \
+  -d '{
+    "mode": "farmer",
     "state": "Maharashtra",
     "district": "Kolhapur",
+    "farmerProfile": {
+      "aadhaarLinked": true,
+      "pmKisanBeneficiary": true,
+      "landOwnership": {
+        "hasLand": true,
+        "landAreaAcres": 1.5,
+        "landType": "irrigated"
+      },
+      "kisanCreditCard": true,
+      "state": "Maharashtra",
+      "district": "Kolhapur"
+    }
+  }'
+```
+
+### 5. End-to-End Profile Eligibility (DigiLocker Mode)
+
+```bash
+curl -X POST http://localhost:8080/api/profile/check-eligibility \
+  -H "Content-Type: application/json" \
+  -d '{
+    "mode": "digilocker",
+    "digiLockerToken": "dl_token_demo",
     "occupation": "student",
-    "student": true,
-    "annualIncome": 250000,
-    "category": "SC"
+    "isStudent": true
   }'
 ```
 
-### Check document readiness (single scheme)
+*Automatically extracts Age, Gender, State, Category (SC), Annual Income from verified Aadhaar, Caste, and Income certificates, checks scheme eligibility, and reports document readiness percentages for every matching scheme.*
 
-```bash
-curl -X POST http://localhost:8080/api/documents/check-readiness \
-  -H "Content-Type: application/json" \
-  -d '{
-    "schemeId": "SCH001",
-    "availableDocuments": ["Aadhaar Card", "Bank Passbook"]
-  }'
-```
-
-### Check document readiness (bulk — multiple schemes)
-
-```bash
-curl -X POST http://localhost:8080/api/documents/check-readiness/bulk \
-  -H "Content-Type: application/json" \
-  -d '{
-    "availableDocuments": ["Aadhaar Card", "Bank Passbook", "PAN Card"],
-    "schemeIds": ["SCH001", "SCH003", "SCH005"]
-  }'
-```
-
-### List required documents
-
-```bash
-curl http://localhost:8080/api/documents/required/SCH001
-```
-
-### Explain an official notice
+### 6. Explain an Official Notice
 
 ```bash
 curl -X POST http://localhost:8080/api/explain \
@@ -211,26 +260,6 @@ curl -X POST http://localhost:8080/api/explain \
   -d '{
     "text": "As per the government order dated 15 March 2025, all eligible SC/ST students must submit their scholarship renewal applications before 30 April 2025. Applicants must visit the nearest District Social Welfare Office and provide updated income certificates."
   }'
-```
-
-### Test invalid input (should return 400)
-
-```bash
-curl -X POST http://localhost:8080/api/schemes/check-eligibility \
-  -H "Content-Type: application/json" \
-  -d '{
-    "age": -5,
-    "state": "",
-    "occupation": "",
-    "annualIncome": -100,
-    "category": "INVALID"
-  }'
-```
-
-### Test nonexistent scheme (should return 404)
-
-```bash
-curl http://localhost:8080/api/schemes/NONEXISTENT
 ```
 
 ---
@@ -243,36 +272,42 @@ backend/scheme-service/
 ├── settings.gradle.kts
 ├── .env.example
 ├── .gitignore
-├── README.md
+├── FEATURES.md                            # Comprehensive live features matrix
+├── README.md                              # Architecture & API documentation
 └── src/main/
     ├── kotlin/com/jansaarthi/schemes/
-    │   ├── Application.kt                 # Entry point + wiring
+    │   ├── Application.kt                 # Ktor server setup, dependency injection & routing
     │   ├── ai/
-    │   │   ├── AIProvider.kt              # Provider interface
-    │   │   ├── RuleBasedProvider.kt        # Deterministic fallback
-    │   │   └── OpenAIProvider.kt           # LLM stub (ready for integration)
+    │   │   ├── AIProvider.kt              # AI provider abstraction interface
+    │   │   ├── RuleBasedProvider.kt       # Deterministic NLP parser fallback
+    │   │   └── OpenAIProvider.kt          # LLM integration provider
     │   ├── config/
-    │   │   ├── DatabaseConfig.kt           # HikariCP + Exposed init
-    │   │   ├── DatabaseSeeder.kt           # Demo data (22 schemes)
-    │   │   └── Tables.kt                  # Exposed table definitions
+    │   │   ├── DatabaseConfig.kt          # Dual-engine connection pool (PostgreSQL + H2)
+    │   │   ├── DatabaseSeeder.kt          # 22 pre-seeded welfare schemes with rules
+    │   │   └── Tables.kt                  # Exposed ORM schema definitions
     │   ├── models/
-    │   │   ├── Scheme.kt                   # Scheme response DTOs
-    │   │   ├── UserProfile.kt              # Eligibility request DTO
-    │   │   ├── EligibilityResult.kt        # Eligibility response DTOs
-    │   │   ├── Document.kt                 # Document readiness DTOs
-    │   │   ├── ExplainModels.kt            # Explain request/response
-    │   │   └── ErrorResponse.kt            # Standardised error DTO
+    │   │   ├── Scheme.kt                  # Scheme DTOs
+    │   │   ├── UserProfile.kt             # Demographic profile DTO
+    │   │   ├── ProfileModels.kt           # DigiLocker, Farmer & Unified profile DTOs
+    │   │   ├── EligibilityResult.kt       # Rule evaluation result DTOs
+    │   │   ├── Document.kt                # Document checklist & readiness DTOs
+    │   │   ├── ExplainModels.kt           # Notice explainer request/response
+    │   │   └── ErrorResponse.kt           # Standardized error response
     │   ├── repositories/
-    │   │   ├── SchemeRepository.kt          # Scheme data access
-    │   │   └── DocumentRepository.kt        # Document requirement queries
+    │   │   ├── SchemeRepository.kt         # Database access for schemes & rules
+    │   │   └── DocumentRepository.kt       # Document requirement queries
     │   ├── routes/
-    │   │   ├── HealthRoutes.kt              # GET /health
-    │   │   ├── SchemeRoutes.kt              # /api/schemes/* + /api/explain
-    │   │   └── DocumentRoutes.kt            # /api/documents/*
+    │   │   ├── HealthRoutes.kt             # GET /health
+    │   │   ├── SchemeRoutes.kt             # /api/schemes/* + /api/explain
+    │   │   ├── DocumentRoutes.kt           # /api/documents/*
+    │   │   └── ProfileRoutes.kt            # /api/profile/* (DigiLocker, Farmer, Unified)
     │   └── services/
-    │       ├── EligibilityService.kt        # Rule-based eligibility engine
-    │       ├── DocumentService.kt           # Document readiness checker
-    │       └── ExplanationService.kt        # AI provider orchestrator
+    │       ├── DigiLockerService.kt        # OAuth 2.0 flow & government document pull
+    │       ├── FarmerService.kt            # Land classification, PM-KISAN, KCC enrichment
+    │       ├── ProfileService.kt           # Unified profile orchestrator (manual/digilocker/farmer)
+    │       ├── EligibilityService.kt       # Multi-condition rule evaluation engine
+    │       ├── DocumentService.kt          # Fuzzy matching & readiness score calculation
+    │       └── ExplanationService.kt       # Official notice analysis orchestrator
     └── resources/
         ├── application.conf
         └── logback.xml
@@ -280,21 +315,8 @@ backend/scheme-service/
 
 ---
 
-## Security Notes
+## Security & Verification Standards
 
-- **Never** commit `.env` files or hardcode API keys.
-- CORS is restricted to `http://localhost:3000` (dev frontend only).
-- Request body size is limited to 1 MB.
-- All user input is validated; malformed requests return HTTP 400.
-- Stack traces and internal details are never exposed to clients.
-- No sensitive information (Aadhaar, bank details) is logged.
-- Government documents are not stored permanently.
-
----
-
-## Disclaimer
-
-This service provides **potential eligibility suggestions** based on
-user-supplied information.  It does **not** constitute official approval.
-The final eligibility decision belongs to the relevant government
-authority.  Always verify through official channels.
+- **Provenance Tracking**: Every profile field records whether it was `SELF_DECLARED` or verified by government authorities (`DIGILOCKER_AADHAAR`, `PM_KISAN_API`, `LAND_RECORD_CLASSIFICATION`).
+- **No Credential Storage**: Citizen Aadhaar numbers and private documents are not stored in the database.
+- **Fail-Safe Operation**: Embeds automatic H2 database fallback and zero-key NLP explanation fallback so services never crash during hackathon demos or offline judging.

@@ -26,3 +26,14 @@ data class SchemeListItem(
     val state: String,
     val officialUrl: String
 )
+
+/** Official state government portal directory */
+@Serializable
+data class StatePortalInfo(
+    val state: String,
+    val portalName: String,
+    val url: String,
+    val category: String,
+    val description: String
+)
+

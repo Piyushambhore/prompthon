@@ -96,20 +96,35 @@ class DocumentService(private val documentRepository: DocumentRepository) {
     private fun normalise(s: String): String = s.lowercase().trim()
 
     /**
-     * Fuzzy match so users don't need to type exact document names.
-     *
+     * Robust fuzzy match for document names so variations, abbreviations,
+     * and aliases match accurately:
      *   "aadhaar"             matches "aadhaar card"
-     *   "income certificate"  matches "income certificate"
-     *   "bank passbook"       matches "bank passbook"
-     *   "college cert"        matches "college certificate"
+     *   "land record"         matches "land ownership records"
+     *   "7/12 extract"        matches "land ownership records"
+     *   "kcc"                 matches "kisan credit card"
+     *   "passbook"            matches "bank passbook"
      */
     private fun matches(userDoc: String, requiredDoc: String): Boolean {
         if (userDoc == requiredDoc) return true
         if (requiredDoc.contains(userDoc) || userDoc.contains(requiredDoc)) return true
 
-        // Token-level: all user tokens must appear in the required document name
-        val userTokens     = userDoc.split(Regex("[\\s\\-_]+")).filter { it.isNotBlank() }
-        val requiredTokens = requiredDoc.split(Regex("[\\s\\-_]+")).filter { it.isNotBlank() }
-        return userTokens.all { ut -> requiredTokens.any { rt -> rt.contains(ut) } }
+        // Domain-specific aliases
+        if ((userDoc.contains("7/12") || userDoc.contains("land")) && requiredDoc.contains("land")) return true
+        if (userDoc.contains("kcc") && requiredDoc.contains("credit")) return true
+        if (userDoc.contains("passbook") && requiredDoc.contains("passbook")) return true
+        if (userDoc.contains("aadhaar") && requiredDoc.contains("aadhaar")) return true
+        if (userDoc.contains("pan") && requiredDoc.contains("pan")) return true
+
+        // Token-level comparison with punctuation stripped
+        val cleanUser = userDoc.replace(Regex("[^a-zA-Z0-9 ]"), " ").trim().lowercase()
+        val cleanReq  = requiredDoc.replace(Regex("[^a-zA-Z0-9 ]"), " ").trim().lowercase()
+        if (cleanReq.contains(cleanUser) || cleanUser.contains(cleanReq)) return true
+
+        val userTokens = cleanUser.split(Regex("\\s+")).filter { it.length > 2 }
+        val reqTokens  = cleanReq.split(Regex("\\s+")).filter { it.length > 2 }
+        if (userTokens.isEmpty() || reqTokens.isEmpty()) return false
+
+        val matchingTokens = userTokens.count { ut -> reqTokens.any { rt -> rt.contains(ut) || ut.contains(rt) } }
+        return matchingTokens >= 1 && (matchingTokens.toDouble() / userTokens.size >= 0.5 || matchingTokens.toDouble() / reqTokens.size >= 0.4)
     }
 }

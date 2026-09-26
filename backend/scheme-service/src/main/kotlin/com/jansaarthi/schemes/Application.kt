@@ -10,10 +10,14 @@ import com.jansaarthi.schemes.repositories.DocumentRepository
 import com.jansaarthi.schemes.repositories.SchemeRepository
 import com.jansaarthi.schemes.routes.documentRoutes
 import com.jansaarthi.schemes.routes.healthRoutes
+import com.jansaarthi.schemes.routes.profileRoutes
 import com.jansaarthi.schemes.routes.schemeRoutes
+import com.jansaarthi.schemes.services.DigiLockerService
 import com.jansaarthi.schemes.services.DocumentService
 import com.jansaarthi.schemes.services.EligibilityService
 import com.jansaarthi.schemes.services.ExplanationService
+import com.jansaarthi.schemes.services.FarmerService
+import com.jansaarthi.schemes.services.ProfileService
 import io.github.cdimascio.dotenv.dotenv
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
@@ -57,11 +61,22 @@ fun main() {
     val eligibilityService  = EligibilityService(schemeRepository)
     val documentService     = DocumentService(documentRepository)
     val explanationService  = ExplanationService(providers)
+    val digiLockerService   = DigiLockerService()
+    val farmerService       = FarmerService()
+    val profileService      = ProfileService(digiLockerService, farmerService)
 
     // ── Start Ktor ─────────────────────────────────────────────────
     embeddedServer(Netty, port = port) {
         configurePlugins()
-        configureRouting(schemeRepository, eligibilityService, documentService, explanationService)
+        configureRouting(
+            schemeRepository,
+            eligibilityService,
+            documentService,
+            explanationService,
+            profileService,
+            digiLockerService,
+            farmerService
+        )
     }.start(wait = true)
 }
 
@@ -77,7 +92,8 @@ fun Application.configurePlugins() {
     }
 
     install(CORS) {
-        allowHost("localhost:3000")                // Dev frontend only — never use "*"
+        allowHost("localhost:3000")                // Dev frontend
+        allowHost("localhost:5001")                // Eligibility analyzer micro-service
         allowHeader(HttpHeaders.ContentType)
         allowHeader(HttpHeaders.Authorization)
         allowMethod(HttpMethod.Get)
@@ -111,11 +127,15 @@ fun Application.configureRouting(
     schemeRepository: SchemeRepository,
     eligibilityService: EligibilityService,
     documentService: DocumentService,
-    explanationService: ExplanationService
+    explanationService: ExplanationService,
+    profileService: ProfileService,
+    digiLockerService: DigiLockerService,
+    farmerService: FarmerService
 ) {
     routing {
         healthRoutes()
         schemeRoutes(schemeRepository, eligibilityService, explanationService)
         documentRoutes(documentService)
+        profileRoutes(profileService, digiLockerService, farmerService, eligibilityService, documentService)
     }
 }

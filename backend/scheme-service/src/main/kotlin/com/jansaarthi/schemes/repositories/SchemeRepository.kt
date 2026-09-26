@@ -5,6 +5,7 @@ import com.jansaarthi.schemes.config.RequiredDocumentsTable
 import com.jansaarthi.schemes.config.SchemesTable
 import com.jansaarthi.schemes.models.SchemeDetailResponse
 import com.jansaarthi.schemes.models.SchemeListItem
+import com.jansaarthi.schemes.models.StatePortalInfo
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.andWhere
 import org.jetbrains.exposed.sql.or
@@ -147,6 +148,46 @@ class SchemeRepository {
                 else -> "Applicant must belong to category: ${value.replace(",", ", ")}"
             }
             else -> "$field $operator $value"
+        }
+    }
+
+    // ── Official State Portals Directory ───────────────────────────
+    fun findStatePortals(state: String? = null): List<StatePortalInfo> {
+        val allPortals = listOf(
+            // Maharashtra
+            StatePortalInfo("Maharashtra", "MahaDBT", "https://mahadbt2.maharashtra.gov.in", "Scholarships & DBT Schemes", "Centralised Direct Benefit Transfer portal for education scholarships and agricultural welfare disbursements"),
+            StatePortalInfo("Maharashtra", "Aaple Sarkar", "https://aaplesarkar.mahaonline.gov.in", "Citizen Certificates & Services", "Single window delivery of citizen certificates (income, caste, domicile) and social assistance schemes"),
+            StatePortalInfo("Maharashtra", "Maharashtra State Govt", "https://maharashtra.gov.in", "Official Government Portal", "Official portal for all state departments, Government Resolutions (GRs), and public notifications"),
+            StatePortalInfo("Maharashtra", "MahaBhumi", "https://mahabhumi.gov.in", "Land Records & Revenue", "Digital land record portal providing 7/12 extracts, 8A extracts, and property card title verification"),
+
+            // Karnataka
+            StatePortalInfo("Karnataka", "Seva Sindhu", "https://sevasindhu.karnataka.gov.in", "Citizen Services & Welfare", "Integrated delivery portal offering 780+ government services including Gruha Lakshmi and Yuva Nidhi"),
+            StatePortalInfo("Karnataka", "Karnataka One", "https://karnatakaone.gov.in", "Citizen Service Centres", "One-stop service center network for utility bills, municipal applications, and government schemes"),
+            StatePortalInfo("Karnataka", "Karnataka Govt", "https://karnataka.gov.in", "Official Government Portal", "Official gateway to state departments, legislative gazettes, and policy notifications"),
+
+            // Kerala
+            StatePortalInfo("Kerala", "E-Grantz 3.0", "https://egrantz.kerala.gov.in", "Scholarships & Education", "Web-based scholarship distribution portal for SC, ST, OBC, and OEC post-matric students"),
+            StatePortalInfo("Kerala", "Akshaya", "https://akshaya.kerala.gov.in", "e-Governance Network", "Grassroots e-governance service center network providing assisted access to all government benefits"),
+            StatePortalInfo("Kerala", "Kerala Govt", "https://kerala.gov.in", "Official Government Portal", "Official portal detailing department operations, state welfare programs, and notifications"),
+
+            // Gujarat
+            StatePortalInfo("Gujarat", "Digital Gujarat", "https://digitalgujarat.gov.in", "Unified Citizen Portal", "Consolidated single-window for 30+ scholarships including MYSY, citizen certificates, and revenue services"),
+            StatePortalInfo("Gujarat", "Gujarat Govt", "https://gujaratindia.gov.in", "Official Government Portal", "Official state portal providing department information, industrial policies, and welfare guidelines"),
+
+            // Telangana
+            StatePortalInfo("Telangana", "MeeSeva Telangana", "https://ts.meeseva.telangana.gov.in", "Citizen Services & Schemes", "Comprehensive portal hosting 580+ G2C services, pension disbursements, and certificates"),
+            StatePortalInfo("Telangana", "ePASS Telangana", "https://epass.cgg.gov.in", "Scholarships & Fee Reimbursement", "Dedicated post-matric scholarship portal for SC, ST, BC, and minority students"),
+            StatePortalInfo("Telangana", "Telangana Govt", "https://telangana.gov.in", "Official Government Portal", "Official state government portal with department details, government orders, and state initiatives"),
+
+            // Haryana
+            StatePortalInfo("Haryana", "Antyodaya SARAL", "https://saralharyana.gov.in", "Single-Window Welfare", "Single platform for 500+ welfare schemes and citizen services aligned with Parivar Pehchan Patra (PPP)"),
+            StatePortalInfo("Haryana", "Haryana Govt", "https://haryana.gov.in", "Official Government Portal", "Official portal for Haryana government departments, gazette orders, and citizen services")
+        )
+
+        return if (state.isNullOrBlank()) {
+            allPortals
+        } else {
+            allPortals.filter { it.state.equals(state.trim(), ignoreCase = true) }
         }
     }
 }

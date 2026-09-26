@@ -475,7 +475,7 @@ object DatabaseSeeder {
                 description = "Tuition fee and examination fee scholarship for economically backward students from OBC, SC, ST, and EWS categories in Maharashtra.",
                 benefits = "Full tuition and examination fee reimbursement for eligible students at recognised institutions in Maharashtra.",
                 state = "Maharashtra", category = "education",
-                officialUrl = "https://mahadbt.maharashtra.gov.in",
+                officialUrl = "https://mahadbt2.maharashtra.gov.in",
                 officialSource = "MahaDBT Portal",
                 lastVerifiedAt = "2025-01-10",
                 rules = listOf(
@@ -494,16 +494,64 @@ object DatabaseSeeder {
                 )
             )
 
-            // ── State-specific: Karnataka ──────────────────────────────
             insertScheme(
                 id = "SCH022",
-                name = "Vidyasiri Scholarship (Karnataka)",
+                name = "Dr. Panjabrao Deshmukh Vasatigruh Nirvah Bhatta Yojna (Maharashtra)",
+                department = "Agriculture and Higher Education Department, Maharashtra",
+                description = "Hostel maintenance allowance for children of registered farmers, small landholders, and agricultural labourers in Maharashtra.",
+                benefits = "Hostel maintenance allowance of up to ₹30,000 per academic year for professional degree courses.",
+                state = "Maharashtra", category = "agriculture",
+                officialUrl = "https://mahadbt2.maharashtra.gov.in",
+                officialSource = "MahaDBT & MahaBhumi Portal",
+                lastVerifiedAt = "2025-01-10",
+                rules = listOf(
+                    Triple("student", "bool_eq", "true"),
+                    Triple("state", "eq", "Maharashtra"),
+                    Triple("annualIncome", "lte", "800000")
+                ),
+                documents = listOf(
+                    "Aadhaar Card" to true,
+                    "Domicile Certificate" to true,
+                    "Land Ownership Records" to true,
+                    "Income Certificate" to true,
+                    "Hostel Certificate" to true,
+                    "Bank Passbook" to true
+                )
+            )
+
+            insertScheme(
+                id = "SCH023",
+                name = "Sanjay Gandhi Niradhar Anudan Yojana (Maharashtra)",
+                department = "Social Justice and Special Assistance Department, Maharashtra",
+                description = "Financial assistance to destitute persons, blind/disabled citizens, widows, and elderly without family support in Maharashtra.",
+                benefits = "Monthly pension grant of ₹1,500 deposited directly via DBT to beneficiary bank accounts.",
+                state = "Maharashtra", category = "pension",
+                officialUrl = "https://aaplesarkar.mahaonline.gov.in",
+                officialSource = "Aaple Sarkar Portal",
+                lastVerifiedAt = "2025-01-10",
+                rules = listOf(
+                    Triple("state", "eq", "Maharashtra"),
+                    Triple("annualIncome", "lte", "50000")
+                ),
+                documents = listOf(
+                    "Aadhaar Card" to true,
+                    "Domicile Certificate" to true,
+                    "Income Certificate" to true,
+                    "Age Proof" to true,
+                    "Bank Passbook" to true
+                )
+            )
+
+            // ── State-specific: Karnataka ──────────────────────────────
+            insertScheme(
+                id = "SCH024",
+                name = "Vidyasiri - Food & Accommodation Scheme (Karnataka)",
                 department = "Department of Backward Classes Welfare, Karnataka",
-                description = "Post-matric scholarship for students from backward classes in Karnataka to support higher education pursuits.",
-                benefits = "Annual scholarship amount and hostel maintenance charges as per category and course norms.",
+                description = "Post-matric scholarship and hostel maintenance for backward classes (OBC/SC/ST) students in Karnataka.",
+                benefits = "Monthly stipend of ₹1,500 for 10 months (₹15,000/year) for students residing in private accommodations.",
                 state = "Karnataka", category = "education",
-                officialUrl = "https://sw.kar.nic.in",
-                officialSource = "Karnataka Social Welfare Department",
+                officialUrl = "https://sevasindhu.karnataka.gov.in",
+                officialSource = "Seva Sindhu Portal",
                 lastVerifiedAt = "2025-01-10",
                 rules = listOf(
                     Triple("student", "bool_eq", "true"),
@@ -513,7 +561,265 @@ object DatabaseSeeder {
                 documents = listOf(
                     "Aadhaar Card" to true,
                     "Income Certificate" to true,
+                    "Caste Certificate" to true,
                     "Previous Year Marksheet" to true,
+                    "College Admission Proof" to true,
+                    "Bank Passbook" to true
+                )
+            )
+
+            insertScheme(
+                id = "SCH025",
+                name = "Gruha Lakshmi Scheme (Karnataka)",
+                department = "Women and Child Development Department, Karnataka",
+                description = "Financial empowerment scheme providing continuous monthly assistance to women heads of eligible households in Karnataka.",
+                benefits = "Direct cash transfer of ₹2,000 per month deposited into the woman head's Aadhaar-linked bank account.",
+                state = "Karnataka", category = "financial",
+                officialUrl = "https://sevasindhu.karnataka.gov.in",
+                officialSource = "Seva Sindhu & Karnataka One",
+                lastVerifiedAt = "2025-01-10",
+                rules = listOf(
+                    Triple("state", "eq", "Karnataka"),
+                    Triple("age", "gte", "18")
+                ),
+                documents = listOf(
+                    "Aadhaar Card" to true,
+                    "Ration Card" to true,
+                    "Bank Passbook" to true
+                )
+            )
+
+            insertScheme(
+                id = "SCH026",
+                name = "Yuva Nidhi Scheme (Karnataka)",
+                department = "Skill Development, Entrepreneurship and Livelihood, Karnataka",
+                description = "Unemployment financial assistance for degree and diploma holders who graduated in Karnataka.",
+                benefits = "Monthly allowance of ₹3,000 for degree holders and ₹1,500 for diploma holders for up to two years.",
+                state = "Karnataka", category = "education",
+                officialUrl = "https://sevasindhu.karnataka.gov.in",
+                officialSource = "Seva Sindhu Portal",
+                lastVerifiedAt = "2025-01-10",
+                rules = listOf(
+                    Triple("state", "eq", "Karnataka"),
+                    Triple("age", "between", "18,35")
+                ),
+                documents = listOf(
+                    "Aadhaar Card" to true,
+                    "Degree/Diploma Certificate" to true,
+                    "Marksheet" to true,
+                    "Domicile Certificate" to true,
+                    "Bank Passbook" to true
+                )
+            )
+
+            // ── State-specific: Kerala ─────────────────────────────────
+            insertScheme(
+                id = "SCH027",
+                name = "E-Grantz 3.0 Post-Matric Educational Assistance (Kerala)",
+                department = "Scheduled Castes and Scheduled Tribes Development, Kerala",
+                description = "Comprehensive educational fee reimbursement and pocket money allowance for SC, ST, OBC, and OEC post-matric students in Kerala.",
+                benefits = "Full tuition and exam fee coverage, lump sum grant for books, and monthly pocket money.",
+                state = "Kerala", category = "education",
+                officialUrl = "https://egrantz.kerala.gov.in",
+                officialSource = "E-Grantz 3.0 Portal",
+                lastVerifiedAt = "2025-01-10",
+                rules = listOf(
+                    Triple("student", "bool_eq", "true"),
+                    Triple("state", "eq", "Kerala"),
+                    Triple("category", "in", "SC,ST,OBC"),
+                    Triple("annualIncome", "lte", "250000")
+                ),
+                documents = listOf(
+                    "Aadhaar Card" to true,
+                    "Caste Certificate" to true,
+                    "Income Certificate" to true,
+                    "Previous Year Marksheet" to true,
+                    "Bank Passbook" to true
+                )
+            )
+
+            insertScheme(
+                id = "SCH028",
+                name = "Karunya Arogya Suraksha Padhathi - KASP (Kerala)",
+                department = "Health and Family Welfare Department, Kerala",
+                description = "Universal health protection scheme providing cashless inpatient treatment to vulnerable families in Kerala.",
+                benefits = "Health insurance cover up to ₹5,00,000 per family per year across empaneled government and private hospitals.",
+                state = "Kerala", category = "health",
+                officialUrl = "https://akshaya.kerala.gov.in",
+                officialSource = "Akshaya & Kerala Govt Portal",
+                lastVerifiedAt = "2025-01-10",
+                rules = listOf(
+                    Triple("state", "eq", "Kerala"),
+                    Triple("annualIncome", "lte", "300000")
+                ),
+                documents = listOf(
+                    "Aadhaar Card" to true,
+                    "Ration Card" to true,
+                    "Income Certificate" to true
+                )
+            )
+
+            // ── State-specific: Gujarat ────────────────────────────────
+            insertScheme(
+                id = "SCH029",
+                name = "Mukhyamantri Yuva Swavalamban Yojana - MYSY (Gujarat)",
+                department = "Education Department, Gujarat",
+                description = "Merit-cum-means scholarship for bright students from economically weaker sections pursuing higher education in Gujarat.",
+                benefits = "50% tuition fee subsidy up to ₹2,00,000 per year, plus ₹1,200/month hostel accommodation allowance.",
+                state = "Gujarat", category = "education",
+                officialUrl = "https://digitalgujarat.gov.in",
+                officialSource = "Digital Gujarat Portal",
+                lastVerifiedAt = "2025-01-10",
+                rules = listOf(
+                    Triple("student", "bool_eq", "true"),
+                    Triple("state", "eq", "Gujarat"),
+                    Triple("annualIncome", "lte", "600000")
+                ),
+                documents = listOf(
+                    "Aadhaar Card" to true,
+                    "Class 10/12 Marksheet" to true,
+                    "Income Certificate" to true,
+                    "Admission Letter" to true,
+                    "Bank Passbook" to true
+                )
+            )
+
+            insertScheme(
+                id = "SCH030",
+                name = "Kisan Suryodaya Yojana (Gujarat)",
+                department = "Energy and Petrochemicals Department, Gujarat",
+                description = "Agricultural power supply and subsidized solar grid connection scheme providing day-time electricity to Gujarat farmers.",
+                benefits = "Reliable 3-phase agricultural power supply during 5 AM to 9 PM, reducing nocturnal irrigation risks for farmers.",
+                state = "Gujarat", category = "agriculture",
+                officialUrl = "https://digitalgujarat.gov.in",
+                officialSource = "Digital Gujarat & Gujarat Govt",
+                lastVerifiedAt = "2025-01-10",
+                rules = listOf(
+                    Triple("occupation", "in", "farmer"),
+                    Triple("state", "eq", "Gujarat")
+                ),
+                documents = listOf(
+                    "Aadhaar Card" to true,
+                    "Land Ownership Records" to true,
+                    "Electricity Connection Proof" to true,
+                    "Bank Passbook" to true
+                )
+            )
+
+            // ── State-specific: Telangana ──────────────────────────────
+            insertScheme(
+                id = "SCH031",
+                name = "Telangana ePASS Post-Matric Scholarship & Vidyarthi Deevana",
+                department = "Backward Classes and SC/ST Welfare Department, Telangana",
+                description = "Post-matric fee reimbursement (RTF) and maintenance fee (MTF) for SC, ST, BC, and EBC students in Telangana.",
+                benefits = "100% college tuition fee reimbursement directly credited to college plus monthly student maintenance allowance.",
+                state = "Telangana", category = "education",
+                officialUrl = "https://epass.cgg.gov.in",
+                officialSource = "ePASS Telangana Portal",
+                lastVerifiedAt = "2025-01-10",
+                rules = listOf(
+                    Triple("student", "bool_eq", "true"),
+                    Triple("state", "eq", "Telangana"),
+                    Triple("category", "in", "SC,ST,OBC,EWS"),
+                    Triple("annualIncome", "lte", "200000")
+                ),
+                documents = listOf(
+                    "Aadhaar Card" to true,
+                    "Caste Certificate" to true,
+                    "Income Certificate" to true,
+                    "Previous Year Marksheet" to true,
+                    "Bank Passbook" to true
+                )
+            )
+
+            insertScheme(
+                id = "SCH032",
+                name = "Rythu Bharosa / Rythu Bandhu (Telangana)",
+                department = "Agriculture and Farmers Welfare Department, Telangana",
+                description = "Direct investment support scheme providing financial grant per acre per season to landholding farmers in Telangana.",
+                benefits = "Direct benefit transfer of ₹10,000 per acre per year (₹5,000 per season) directly to farmer bank accounts.",
+                state = "Telangana", category = "agriculture",
+                officialUrl = "https://ts.meeseva.telangana.gov.in",
+                officialSource = "MeeSeva Telangana Portal",
+                lastVerifiedAt = "2025-01-10",
+                rules = listOf(
+                    Triple("occupation", "in", "farmer"),
+                    Triple("state", "eq", "Telangana")
+                ),
+                documents = listOf(
+                    "Aadhaar Card" to true,
+                    "Land Ownership Records" to true,
+                    "Pattadar Passbook" to true,
+                    "Bank Passbook" to true
+                )
+            )
+
+            insertScheme(
+                id = "SCH033",
+                name = "Aasara Pension Scheme (Telangana)",
+                department = "Panchayat Raj and Rural Development, Telangana",
+                description = "Social security monthly pension scheme for the elderly, disabled, widows, and weavers/toddy tappers in Telangana.",
+                benefits = "Monthly pension of ₹2,016 for elderly/widows and ₹3,016 for disabled citizens credited on 1st of every month.",
+                state = "Telangana", category = "pension",
+                officialUrl = "https://ts.meeseva.telangana.gov.in",
+                officialSource = "MeeSeva Telangana Portal",
+                lastVerifiedAt = "2025-01-10",
+                rules = listOf(
+                    Triple("state", "eq", "Telangana"),
+                    Triple("age", "gte", "57"),
+                    Triple("annualIncome", "lte", "150000")
+                ),
+                documents = listOf(
+                    "Aadhaar Card" to true,
+                    "Age Proof" to true,
+                    "Income Certificate" to true,
+                    "Bank Passbook" to true
+                )
+            )
+
+            // ── State-specific: Haryana ────────────────────────────────
+            insertScheme(
+                id = "SCH034",
+                name = "Mukhyamantri Parivar Samridhi Yojana - MMPSY (Haryana)",
+                department = "Citizens Resources Information Department (CRID), Haryana",
+                description = "Social security and financial safety net for low-income families verified through Haryana Parivar Pehchan Patra (PPP).",
+                benefits = "Annual financial assistance of ₹6,000 per family for social security pension and life/accidental insurance premiums.",
+                state = "Haryana", category = "financial",
+                officialUrl = "https://saralharyana.gov.in",
+                officialSource = "Antyodaya SARAL Portal",
+                lastVerifiedAt = "2025-01-10",
+                rules = listOf(
+                    Triple("state", "eq", "Haryana"),
+                    Triple("annualIncome", "lte", "180000")
+                ),
+                documents = listOf(
+                    "Aadhaar Card" to true,
+                    "Parivar Pehchan Patra (Family ID)" to true,
+                    "Bank Passbook" to true
+                )
+            )
+
+            insertScheme(
+                id = "SCH035",
+                name = "Haryana Post-Matric Scholarship for SC/BC Students",
+                department = "Higher Education Department, Haryana",
+                description = "Complete financial support covering 100% course fees and maintenance allowance for SC and BC students in Haryana.",
+                benefits = "Full tuition fee reimbursement and monthly allowance of up to ₹1,200 deposited via DBT on Antyodaya SARAL.",
+                state = "Haryana", category = "education",
+                officialUrl = "https://saralharyana.gov.in",
+                officialSource = "Antyodaya SARAL Portal",
+                lastVerifiedAt = "2025-01-10",
+                rules = listOf(
+                    Triple("student", "bool_eq", "true"),
+                    Triple("state", "eq", "Haryana"),
+                    Triple("category", "in", "SC,OBC"),
+                    Triple("annualIncome", "lte", "250000")
+                ),
+                documents = listOf(
+                    "Aadhaar Card" to true,
+                    "Parivar Pehchan Patra (Family ID)" to true,
+                    "Caste Certificate" to true,
+                    "Income Certificate" to true,
                     "College Admission Proof" to true,
                     "Bank Passbook" to true
                 )
