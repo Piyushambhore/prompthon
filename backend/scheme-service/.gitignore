@@ -17,3 +17,8 @@ out/
 
 # Logs
 *.log
+
+# Local embedded database
+data/
+*.db
+
