@@ -1,0 +1,138 @@
+<resources>
+    <!-- App Branding & Core -->
+    <string name="app_name">JanSaarthi</string>
+    <string name="app_tagline">Citizen Services &amp; Welfare Portal</string>
+    <string name="gov_india">Government of India | भारत सरकार</string>
+    <string name="official_portal">Official Portal</string>
+    <string name="verified_citizen">Verified Citizen</string>
+    <string name="prototype_disclaimer">Prototype Evaluation • NIC &amp; Digital India Architecture</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_schemes">Schemes</string>
+    <string name="nav_applications">Applications</string>
+    <string name="nav_documents">Documents</string>
+    <string name="nav_profile">Profile</string>
+    <string name="nav_back">Back</string>
+
+    <!-- Buttons -->
+    <string name="btn_apply_now">Apply Now</string>
+    <string name="btn_check_eligibility">Check My Scheme Eligibility</string>
+    <string name="btn_view_details">View Details</string>
+    <string name="btn_save_scheme">Save Scheme</string>
+    <string name="btn_saved">Saved</string>
+    <string name="btn_unsave">Remove from Saved</string>
+    <string name="btn_download">Download</string>
+    <string name="btn_upload_document">Upload Document</string>
+    <string name="btn_sync_digilocker">Sync DigiLocker</string>
+    <string name="btn_search">Search</string>
+    <string name="btn_filter">Filter</string>
+    <string name="btn_clear_filters">Clear Filters</string>
+    <string name="btn_apply_filters">Apply Filters</string>
+    <string name="btn_reset">Reset</string>
+    <string name="btn_retry">Try Again</string>
+    <string name="btn_confirm">Confirm &amp; Proceed</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="btn_close">Close</string>
+    <string name="btn_submit">Submit Application</string>
+    <string name="btn_explore_schemes">Explore Schemes</string>
+    <string name="btn_view_all">View All</string>
+    <string name="btn_track_status">Track Status</string>
+    <string name="btn_sign_in">Sign In</string>
+    <string name="btn_sign_out">Sign Out</string>
+    <string name="btn_change_state">Change State</string>
+    <string name="btn_change_language">Change Language</string>
+
+    <!-- Labels & Badges -->
+    <string name="label_central_gov">Central Government</string>
+    <string name="label_state_gov">State Government</string>
+    <string name="label_union_territory">Union Territory</string>
+    <string name="label_all_schemes">All Schemes</string>
+    <string name="label_dbt_enabled">DBT Active</string>
+    <string name="label_dbt_status">DBT Status: Bank Account Linked</string>
+    <string name="label_active_applications">Active Applications</string>
+    <string name="label_required">Required</string>
+    <string name="label_optional">Optional</string>
+    <string name="label_ready">Ready</string>
+    <string name="label_missing">Missing</string>
+    <string name="label_ministry">Ministry / Department</string>
+    <string name="label_benefit">Benefit Highlight</string>
+    <string name="label_eligibility">Eligibility Criteria</string>
+    <string name="label_documents_required">Required Documents</string>
+    <string name="label_application_process">Application Process</string>
+    <string name="label_key_highlights">Key Highlights</string>
+    <string name="label_last_updated">Last Updated</string>
+    <string name="label_readiness_score">Document Readiness Score</string>
+    <string name="label_reference_number">Application Reference Number</string>
+    <string name="label_application_date">Application Date</string>
+    <string name="label_status_eligible">You are Eligible</string>
+    <string name="label_status_family">Family Benefit</string>
+    <string name="label_status_conditional">Check Criteria</string>
+    <string name="label_status_universal">Universal Citizen</string>
+
+    <!-- Filters & Tabs -->
+    <string name="filter_all">All</string>
+    <string name="filter_central">Central Government</string>
+    <string name="filter_state">State Government</string>
+    <string name="filter_ut">Union Territory</string>
+    <string name="filter_category">Category</string>
+    <string name="filter_all_categories">All Categories</string>
+    <string name="filter_all_states">All States &amp; UTs</string>
+    <string name="filter_dbt_only">DBT Direct Transfer Only</string>
+    <string name="filter_sort_by">Sort By</string>
+    <string name="sort_popularity">Most Popular</string>
+    <string name="sort_amount_desc">Benefit: High to Low</string>
+    <string name="sort_newest">Recently Added</string>
+    <string name="filter_status_draft">Draft</string>
+    <string name="filter_status_applied">Applied</string>
+    <string name="filter_status_under_process">Under Process</string>
+    <string name="filter_status_approved">Approved</string>
+    <string name="filter_status_rejected">Rejected</string>
+    <string name="filter_status_completed">Completed</string>
+
+    <!-- Empty States -->
+    <string name="empty_schemes_title">No Schemes Found</string>
+    <string name="empty_schemes_desc">Try adjusting your search keywords or clear active filters to view available welfare programs.</string>
+    <string name="empty_applications_title">No Applications Yet</string>
+    <string name="empty_applications_desc">You have not submitted any scheme applications yet. Browse schemes and apply in simple steps.</string>
+    <string name="empty_documents_title">No Documents in Vault</string>
+    <string name="empty_documents_desc">Sync with DigiLocker or upload your certificates for instantaneous eligibility verification.</string>
+    <string name="empty_saved_title">No Saved Schemes</string>
+    <string name="empty_saved_desc">Bookmark schemes using the star icon on any card to review and apply for them later.</string>
+    <string name="empty_search_title">No Matching Search Results</string>
+    <string name="empty_search_desc">We could not find any schemes matching your search. Try different terms or browse categories.</string>
+
+    <!-- Errors -->
+    <string name="error_generic_title">Something Went Wrong</string>
+    <string name="error_generic_desc">Unable to complete the operation. Please check your network and try again.</string>
+    <string name="error_network_title">No Internet Connection</string>
+    <string name="error_network_desc">Please connect to the internet to load updated government scheme information.</string>
+    <string name="error_submission_failed">Application submission failed. Please verify all details and retry.</string>
+    <string name="error_fill_required_fields">Please complete all mandatory fields before proceeding.</string>
+    <string name="error_invalid_input">Invalid input entered. Please review your details.</string>
+
+    <!-- Help & Support -->
+    <string name="help_title">Citizen Helpdesk &amp; Support</string>
+    <string name="help_subtitle">Official national helpline and grievance redressal system</string>
+    <string name="help_toll_free">National Toll-Free Helpline: 1800-11-0011</string>
+    <string name="help_hours">Available 24x7 in 12 Indian Languages</string>
+    <string name="help_faq_title">Frequently Asked Questions (FAQ)</string>
+    <string name="help_contact_support">Contact Helpdesk</string>
+    <string name="help_grievance">Grievance Redressal (CPGRAMS)</string>
+    <string name="help_dpdp">Compliant with Digital Personal Data Protection Act 2023</string>
+
+    <!-- Settings & Profile -->
+    <string name="settings_title">Profile &amp; Settings</string>
+    <string name="settings_easy_mode">Accessibility / Easy Mode</string>
+    <string name="settings_easy_mode_desc">Larger text, simpler navigation, and high contrast for seniors</string>
+    <string name="settings_language">Language Preference</string>
+    <string name="settings_notifications">Notifications &amp; Alerts</string>
+    <string name="settings_privacy_security">Privacy &amp; Data Security</string>
+    <string name="settings_account_details">Citizen Account Information</string>
+    <string name="settings_resident_state">Resident State / UT</string>
+    <string name="settings_digilocker_status">DigiLocker Linked</string>
+    <string name="settings_about_title">About JanSaarthi</string>
+    <string name="settings_about_desc">National unified single-window citizen welfare and public benefit discovery platform.</string>
+    <string name="settings_logout_title">Sign Out Confirmation</string>
+    <string name="settings_logout_message">Are you sure you want to sign out of JanSaarthi on this device?</string>
+</resources>

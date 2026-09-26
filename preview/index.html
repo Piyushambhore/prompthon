@@ -1,0 +1,2033 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JanSaarthi (जन सारथी) — Citizen Welfare Portal Preview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --gov-navy-primary: #002B49;
+      --gov-navy-dark: #001A2C;
+      --gov-navy-light: #0A3C66;
+      --gov-saffron: #FF6B00;
+      --gov-saffron-light: #FFF2E8;
+      --gov-green: #0D7A3E;
+      --gov-green-light: #E8F5EE;
+      --gov-ashoka-blue: #1A365D;
+      --gov-gold: #D97706;
+      --bg-slate: #F1F5F9;
+      --surface-white: #FFFFFF;
+      --surface-card: #FFFFFF;
+      --border-subtle: #E2E8F0;
+      --border-strong: #CBD5E1;
+      --text-primary: #0F172A;
+      --text-secondary: #475569;
+      --text-muted: #94A3B8;
+      --font-scale: 1;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+      user-select: none;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', 'Noto Sans Devanagari', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #0B1320;
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      overflow-x: hidden;
+      padding: 16px 8px 40px 8px;
+    }
+
+    /* Top Studio Bar */
+    .studio-bar {
+      width: 100%;
+      max-width: 1100px;
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 16px;
+      padding: 12px 20px;
+      margin-bottom: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      color: #FFFFFF;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .studio-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .chakra-badge {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #FF6B00 0%, #FFFFFF 50%, #0D7A3E 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      font-size: 20px;
+      color: #002B49;
+      font-weight: bold;
+    }
+
+    .studio-title {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.2px;
+    }
+
+    .studio-subtitle {
+      font-size: 11px;
+      color: #94A3B8;
+    }
+
+    .studio-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .studio-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #FFFFFF;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .studio-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.4);
+      transform: translateY(-1px);
+    }
+
+    .studio-btn.active {
+      background: var(--gov-saffron);
+      border-color: var(--gov-saffron);
+      color: #FFFFFF;
+    }
+
+    .quick-screens {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 4px;
+      border-radius: 10px;
+    }
+
+    .quick-pill {
+      background: transparent;
+      border: none;
+      color: #94A3B8;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 5px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .quick-pill.active {
+      background: #FFFFFF;
+      color: var(--gov-navy-primary);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+
+    /* Device Simulator Container */
+    .simulator-wrapper {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .phone-frame {
+      width: 412px;
+      height: 846px;
+      background: #000000;
+      border-radius: 50px;
+      padding: 12px;
+      box-shadow: 
+        0 0 0 3px #2D3748,
+        0 0 0 7px #1A202C,
+        0 25px 60px -15px rgba(0, 0, 0, 0.8),
+        0 0 100px rgba(0, 43, 73, 0.35);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transition: width 0.3s ease, height 0.3s ease, border-radius 0.3s ease;
+    }
+
+    .phone-frame.fullscreen-mode {
+      width: 480px;
+      height: 880px;
+      border-radius: 36px;
+    }
+
+    .phone-screen {
+      width: 100%;
+      height: 100%;
+      background: var(--bg-slate);
+      border-radius: 38px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      background-color: #F8FAFC;
+    }
+
+    /* Dynamic Island / Punch Hole */
+    .phone-notch {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 110px;
+      height: 24px;
+      background: #000000;
+      border-radius: 16px;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 10px;
+    }
+
+    .camera-lens {
+      width: 10px;
+      height: 10px;
+      background: #111A24;
+      border-radius: 50%;
+      border: 1px solid #1E293B;
+    }
+
+    .speaker-slot {
+      width: 36px;
+      height: 3px;
+      background: #1F2937;
+      border-radius: 2px;
+    }
+
+    /* Mobile Status Bar */
+    .status-bar {
+      height: 38px;
+      padding: 8px 24px 0 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: #0F172A;
+      z-index: 90;
+      background: transparent;
+    }
+
+    .status-bar.dark-tint {
+      color: #FFFFFF;
+    }
+
+    .status-icons {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+    }
+
+    /* Screen Views Container */
+    .screens-viewport {
+      flex: 1;
+      position: relative;
+      overflow-y: auto;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      scroll-behavior: smooth;
+    }
+
+    /* Screen Base */
+    .screen {
+      display: none;
+      flex-direction: column;
+      min-height: 100%;
+      animation: fadeInSlide 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      padding-bottom: 74px; /* Bottom nav offset */
+    }
+
+    .screen.active {
+      display: flex;
+    }
+
+    @keyframes fadeInSlide {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Official Government Header Banner */
+    .gov-top-banner {
+      background: linear-gradient(135deg, var(--gov-navy-primary) 0%, var(--gov-navy-dark) 100%);
+      color: #FFFFFF;
+      padding: 12px 16px 14px 16px;
+      position: relative;
+      box-shadow: 0 4px 12px rgba(0, 43, 73, 0.12);
+    }
+
+    .gov-flag-stripe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #FF6B00 33.3%, #FFFFFF 33.3%, #FFFFFF 66.6%, #0D7A3E 66.6%);
+    }
+
+    .gov-banner-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .gov-identity {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .emblem-icon {
+      width: 32px;
+      height: 32px;
+      background: #FFFFFF;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: var(--gov-navy-primary);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+
+    .gov-titles h1 {
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: -0.2px;
+      line-height: 1.1;
+    }
+
+    .gov-titles p {
+      font-size: 10px;
+      color: #CBD5E1;
+      font-weight: 500;
+    }
+
+    .accessibility-quick-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .mini-badge-btn {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #FFFFFF;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 7px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    /* Bottom Navigation Bar */
+    .bottom-nav {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 64px;
+      background: #FFFFFF;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding: 0 8px 10px 8px;
+      z-index: 80;
+      box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.05);
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      background: none;
+      border: none;
+      color: #64748B;
+      font-size: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 60px;
+      padding: 6px 0;
+      border-radius: 8px;
+      transition: all 0.15s ease;
+    }
+
+    .nav-item svg {
+      width: 20px;
+      height: 20px;
+      stroke-width: 2.2;
+    }
+
+    .nav-item.active {
+      color: var(--gov-navy-primary);
+    }
+
+    .nav-item.active .nav-icon-box {
+      background: #EBF3FA;
+      border-radius: 12px;
+      padding: 3px 12px;
+    }
+
+    /* Common Card Styles */
+    .card {
+      background: var(--surface-white);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 12px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .card:active {
+      transform: scale(0.99);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .badge-central {
+      background: var(--gov-saffron-light);
+      color: var(--gov-saffron);
+      border: 1px solid rgba(255, 107, 0, 0.25);
+    }
+
+    .badge-state {
+      background: #EBF3FA;
+      color: var(--gov-navy-primary);
+      border: 1px solid #BFDBFE;
+    }
+
+    .badge-dbt {
+      background: var(--gov-green-light);
+      color: var(--gov-green);
+      border: 1px solid rgba(13, 122, 62, 0.25);
+    }
+
+    /* Screen: Login / Auth */
+    .auth-container {
+      padding: 20px 18px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .tab-pills {
+      display: flex;
+      background: #E2E8F0;
+      padding: 3px;
+      border-radius: 10px;
+      margin-bottom: 14px;
+    }
+
+    .tab-pill {
+      flex: 1;
+      border: none;
+      background: transparent;
+      padding: 7px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #64748B;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .tab-pill.active {
+      background: #FFFFFF;
+      color: var(--gov-navy-primary);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+    }
+
+    .form-group {
+      margin-bottom: 12px;
+    }
+
+    .form-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      margin-bottom: 5px;
+      display: block;
+    }
+
+    .form-input {
+      width: 100%;
+      height: 42px;
+      padding: 0 12px;
+      border: 1.5px solid var(--border-subtle);
+      border-radius: 10px;
+      font-size: 13px;
+      font-family: inherit;
+      background: #FFFFFF;
+      transition: border-color 0.15s ease;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--gov-navy-primary);
+    }
+
+    .btn-primary {
+      width: 100%;
+      height: 44px;
+      background: var(--gov-navy-primary);
+      color: #FFFFFF;
+      border: none;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      box-shadow: 0 4px 12px rgba(0, 43, 73, 0.2);
+      transition: transform 0.1s ease;
+    }
+
+    .btn-primary:active {
+      transform: scale(0.98);
+    }
+
+    .btn-outline {
+      width: 100%;
+      height: 42px;
+      background: transparent;
+      border: 1.5px solid var(--border-subtle);
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--gov-navy-primary);
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    /* Screen: State Selection */
+    .search-box-wrap {
+      padding: 12px 16px 6px 16px;
+    }
+
+    .search-input {
+      width: 100%;
+      height: 40px;
+      padding: 0 12px 0 36px;
+      border-radius: 10px;
+      border: 1.5px solid var(--border-subtle);
+      font-size: 12px;
+      font-family: inherit;
+      background: #FFFFFF url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%2394A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>') no-repeat 10px center;
+    }
+
+    .filter-chips-row {
+      display: flex;
+      gap: 6px;
+      padding: 8px 16px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .filter-chip {
+      background: #FFFFFF;
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #64748B;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .filter-chip.active {
+      background: var(--gov-navy-primary);
+      color: #FFFFFF;
+      border-color: var(--gov-navy-primary);
+    }
+
+    .state-list {
+      padding: 8px 16px;
+    }
+
+    .state-card-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      background: #FFFFFF;
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .state-card-item:hover, .state-card-item.selected {
+      border-color: var(--gov-navy-primary);
+      background: #F8FAFC;
+    }
+
+    .state-card-item.selected {
+      box-shadow: 0 0 0 1.5px var(--gov-navy-primary);
+    }
+
+    /* Home Dashboard specific */
+    .dbt-active-banner {
+      background: linear-gradient(90deg, #E8F5EE 0%, #F0FDF4 100%);
+      border: 1px solid #BBF7D0;
+      border-radius: 12px;
+      padding: 10px 14px;
+      margin: 10px 16px 6px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .dbt-text {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--gov-green);
+    }
+
+    .quick-categories-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      padding: 10px 16px;
+    }
+
+    .cat-grid-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 10px 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      cursor: pointer;
+      gap: 5px;
+      transition: transform 0.1s ease;
+    }
+
+    .cat-grid-card:hover {
+      border-color: var(--gov-navy-primary);
+      transform: translateY(-2px);
+    }
+
+    .cat-icon-circle {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #F1F5F9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .cat-name {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.2;
+    }
+
+    .eligibility-cta-card {
+      margin: 8px 16px 12px 16px;
+      background: linear-gradient(135deg, #0A3C66 0%, #002B49 100%);
+      color: #FFFFFF;
+      border-radius: 14px;
+      padding: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 14px rgba(0, 43, 73, 0.2);
+      cursor: pointer;
+    }
+
+    .cta-badge-pill {
+      background: var(--gov-saffron);
+      color: #FFFFFF;
+      font-size: 9px;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 4px;
+      display: inline-block;
+      margin-bottom: 4px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 16px 6px 16px;
+    }
+
+    .section-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--gov-navy-primary);
+    }
+
+    .section-link {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--gov-saffron);
+      cursor: pointer;
+    }
+
+    /* Scheme Cards */
+    .schemes-stream {
+      padding: 0 16px 16px 16px;
+    }
+
+    .scheme-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+      cursor: pointer;
+      position: relative;
+    }
+
+    .scheme-card:hover {
+      border-color: #94A3B8;
+    }
+
+    .scheme-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .scheme-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.3;
+    }
+
+    .scheme-dept {
+      font-size: 10px;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+
+    .scheme-benefit-box {
+      background: #F8FAFC;
+      border-left: 3px solid var(--gov-green);
+      padding: 6px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #1E293B;
+      margin-bottom: 10px;
+    }
+
+    .scheme-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 6px;
+      border-top: 1px dashed var(--border-subtle);
+    }
+
+    /* Modal Sheet for Scheme Details */
+    .modal-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 200;
+      display: none;
+      align-items: flex-end;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-sheet {
+      width: 100%;
+      max-height: 85%;
+      background: #FFFFFF;
+      border-radius: 24px 24px 0 0;
+      padding: 18px;
+      overflow-y: auto;
+      box-shadow: 0 -8px 30px rgba(0,0,0,0.25);
+      animation: sheetSlideUp 0.25s ease-out;
+    }
+
+    @keyframes sheetSlideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+
+    .sheet-handle {
+      width: 36px;
+      height: 4px;
+      background: #CBD5E1;
+      border-radius: 2px;
+      margin: 0 auto 12px auto;
+    }
+
+    .detail-section {
+      margin-bottom: 14px;
+    }
+
+    .detail-h3 {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--gov-navy-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .detail-bullet-list {
+      list-style: none;
+      font-size: 11px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .detail-bullet-list li {
+      margin-bottom: 4px;
+      position: relative;
+      padding-left: 14px;
+    }
+
+    .detail-bullet-list li::before {
+      content: "•";
+      position: absolute;
+      left: 2px;
+      color: var(--gov-saffron);
+      font-weight: bold;
+    }
+
+    /* Toast Notification */
+    .toast-msg {
+      position: absolute;
+      top: 50px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #002B49;
+      color: #FFFFFF;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      z-index: 300;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+      display: none;
+      align-items: center;
+      gap: 6px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Studio Control Bar -->
+  <header class="studio-bar">
+    <div class="studio-brand">
+      <div class="chakra-badge">☸</div>
+      <div>
+        <div class="studio-title">JanSaarthi (जन सारथी)</div>
+        <div class="studio-subtitle">Government of India • Citizen Welfare Frontend Live Simulator</div>
+      </div>
+    </div>
+
+    <div class="quick-screens">
+      <button class="quick-pill active" onclick="switchScreen('screen-home', this)">Home</button>
+      <button class="quick-pill" onclick="switchScreen('screen-schemes', this)">Schemes</button>
+      <button class="quick-pill" onclick="switchScreen('screen-categories', this)">15 Categories</button>
+      <button class="quick-pill" onclick="switchScreen('screen-ministries', this)">Ministries</button>
+      <button class="quick-pill" onclick="switchScreen('screen-eligibility', this)">Find For Me</button>
+      <button class="quick-pill" onclick="switchScreen('screen-applications', this)">Applications</button>
+      <button class="quick-pill" onclick="switchScreen('screen-documents', this)">Documents</button>
+      <button class="quick-pill" onclick="switchScreen('screen-state', this)">State (36)</button>
+      <button class="quick-pill" onclick="switchScreen('screen-login', this)">Auth</button>
+      <button class="quick-pill" onclick="switchScreen('screen-profile', this)">Profile</button>
+    </div>
+
+    <div class="studio-controls">
+      <button class="studio-btn" id="lang-toggle-btn" onclick="toggleLanguage()">
+        🌐 <span id="current-lang-text">English (EN)</span>
+      </button>
+      <button class="studio-btn" id="font-scale-btn" onclick="toggleFontScale()">
+        🔠 <span id="font-scale-text">Text Size: Normal</span>
+      </button>
+      <button class="studio-btn" onclick="toggleFrameSize()">
+        📱 Expand Frame
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile Phone Simulator Frame -->
+  <main class="simulator-wrapper">
+    <div class="phone-frame" id="phone-frame-element">
+      <div class="phone-screen">
+
+        <!-- Physical Notch & Dynamic Island -->
+        <div class="phone-notch">
+          <div class="camera-lens"></div>
+          <div class="speaker-slot"></div>
+        </div>
+
+        <!-- Phone Status Bar -->
+        <div class="status-bar" id="mobile-status-bar">
+          <span id="live-clock">10:45</span>
+          <div class="status-icons">
+            <span>5G</span>
+            <span>📶</span>
+            <span>98% 🔋</span>
+          </div>
+        </div>
+
+        <!-- Scrollable Screens Container -->
+        <div class="screens-viewport">
+
+          <!-- 1. SCREEN: HOME DASHBOARD -->
+          <section class="screen active" id="screen-home">
+            <div class="gov-top-banner">
+              <div class="gov-flag-stripe"></div>
+              <div class="gov-banner-row">
+                <div class="gov-identity">
+                  <div class="emblem-icon">🏛️</div>
+                  <div class="gov-titles">
+                    <h1>JanSaarthi</h1>
+                    <p>Govt of India • Digital India</p>
+                  </div>
+                </div>
+                <div class="accessibility-quick-row">
+                  <button class="mini-badge-btn" onclick="switchScreen('screen-state')">
+                    📍 <span id="home-state-name">All India</span>
+                  </button>
+                  <button class="mini-badge-btn" onclick="toggleLanguage()">
+                    <span id="mini-lang-label">हिं</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Citizen Greeting Card -->
+            <div style="padding: 12px 16px 4px 16px;">
+              <div style="font-size: 11px; color: #64748B; font-weight: 600;">Welcome Citizen,</div>
+              <div style="font-size: 18px; font-weight: 800; color: var(--gov-navy-primary);" id="user-display-name">Ramesh Kumar Sharma</div>
+            </div>
+
+            <!-- DBT Active Status -->
+            <div class="dbt-active-banner">
+              <div class="dbt-text">
+                <span style="font-size: 16px;">✓</span>
+                <div>
+                  <div style="line-height: 1.2;">Aadhaar DBT Status: Active</div>
+                  <div style="font-size: 10px; color: #475569; font-weight: 500;">Linked with SBI • A/c ***4821</div>
+                </div>
+              </div>
+              <span class="badge badge-dbt">VERIFIED</span>
+            </div>
+
+            <!-- Find Schemes For Me Banner -->
+            <div class="eligibility-cta-card" onclick="switchScreen('screen-eligibility')">
+              <div>
+                <span class="cta-badge-pill">SMART RECOMMENDATION</span>
+                <div style="font-size: 14px; font-weight: 800; line-height: 1.2;">Find Schemes For Me</div>
+                <div style="font-size: 11px; opacity: 0.85; margin-top: 2px;">Answer 4 simple questions & discover 12+ eligible benefits</div>
+              </div>
+              <div style="font-size: 24px; font-weight: bold;">→</div>
+            </div>
+
+            <!-- Quick Categories Grid -->
+            <div class="section-header">
+              <span class="section-title">Explore by Need</span>
+              <span class="section-link" onclick="switchScreen('screen-categories')">View All 15 →</span>
+            </div>
+
+            <div class="quick-categories-grid">
+              <div class="cat-grid-card" onclick="filterByCat('Agriculture')">
+                <div class="cat-icon-circle" style="background: #E8F5EE; color: #0D7A3E;">🌾</div>
+                <div class="cat-name">Farmers</div>
+              </div>
+              <div class="cat-grid-card" onclick="filterByCat('Healthcare')">
+                <div class="cat-icon-circle" style="background: #FEE2E2; color: #DC2626;">🏥</div>
+                <div class="cat-name">Healthcare</div>
+              </div>
+              <div class="cat-grid-card" onclick="filterByCat('Housing')">
+                <div class="cat-icon-circle" style="background: #FEF3C7; color: #D97706;">🏠</div>
+                <div class="cat-name">Housing</div>
+              </div>
+              <div class="cat-grid-card" onclick="filterByCat('Education')">
+                <div class="cat-icon-circle" style="background: #E0E7FF; color: #4F46E5;">🎓</div>
+                <div class="cat-name">Education</div>
+              </div>
+            </div>
+
+            <!-- Featured Schemes Section -->
+            <div class="section-header">
+              <span class="section-title">High Impact Welfare Schemes</span>
+              <span class="section-link" onclick="switchScreen('screen-schemes')">All Schemes →</span>
+            </div>
+
+            <div class="schemes-stream" id="home-schemes-container">
+              <!-- Dynamically populated -->
+            </div>
+          </section>
+
+          <!-- 2. SCREEN: SCHEMES & SEARCH -->
+          <section class="screen" id="screen-schemes">
+            <div class="gov-top-banner">
+              <div class="gov-flag-stripe"></div>
+              <div class="gov-banner-row">
+                <div class="gov-identity">
+                  <div class="emblem-icon">📋</div>
+                  <div class="gov-titles">
+                    <h1>Welfare Schemes Directory</h1>
+                    <p>Central & State Welfare Programs</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="search-box-wrap">
+              <input type="text" id="scheme-search-input" class="search-input" placeholder="Search PM Kisan, Ayushman, scholarships..." oninput="onSearchInput(this.value)">
+            </div>
+
+            <div class="filter-chips-row">
+              <button class="filter-chip active" onclick="setSchemeFilter('ALL', this)">All (32)</button>
+              <button class="filter-chip" onclick="setSchemeFilter('CENTRAL', this)">Central Govt</button>
+              <button class="filter-chip" onclick="setSchemeFilter('STATE', this)">State Specific</button>
+              <button class="filter-chip" onclick="setSchemeFilter('DBT', this)">DBT Cash Transfer</button>
+            </div>
+
+            <div class="schemes-stream" id="all-schemes-container">
+              <!-- Dynamically populated -->
+            </div>
+          </section>
+
+          <!-- 3. SCREEN: 15 CATEGORIES -->
+          <section class="screen" id="screen-categories">
+            <div class="gov-top-banner">
+              <div class="gov-flag-stripe"></div>
+              <div class="gov-banner-row">
+                <div class="gov-identity">
+                  <div class="emblem-icon">📂</div>
+                  <div class="gov-titles">
+                    <h1>15 Government Categories</h1>
+                    <p>Classified under National Governance Pillars</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style="padding: 12px 16px;" id="categories-list-container">
+              <!-- Dynamically populated -->
+            </div>
+          </section>
+
+          <!-- 4. SCREEN: MINISTRIES -->
+          <section class="screen" id="screen-ministries">
+            <div class="gov-top-banner">
+              <div class="gov-flag-stripe"></div>
+              <div class="gov-banner-row">
+                <div class="gov-identity">
+                  <div class="emblem-icon">🏛️</div>
+                  <div class="gov-titles">
+                    <h1>Ministries & Departments</h1>
+                    <p>Government of India Portfolios</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style="padding: 12px 16px;" id="ministries-list-container">
+              <!-- Dynamically populated -->
+            </div>
+          </section>
+
+          <!-- 5. SCREEN: FIND SCHEMES FOR ME (ELIGIBILITY) -->
+          <section class="screen" id="screen-eligibility">
+            <div class="gov-top-banner">
+              <div class="gov-flag-stripe"></div>
+              <div class="gov-banner-row">
+                <div class="gov-identity">
+                  <div class="emblem-icon">🎯</div>
+                  <div class="gov-titles">
+                    <h1>Find Schemes For Me</h1>
+                    <p>Intelligent Eligibility Engine</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style="padding: 16px;">
+              <div class="card" style="border-left: 4px solid var(--gov-saffron);">
+                <div style="font-size: 13px; font-weight: 700;">Complete Profile Details</div>
+                <div style="font-size: 11px; color: #64748B;">Our matching algorithm cross-checks 500+ government rules to identify your entitlement.</div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Your Age (Years)</label>
+                <input type="number" class="form-input" id="calc-age" value="38">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Gender</label>
+                <div class="tab-pills">
+                  <button class="tab-pill active" onclick="setGender('Male', this)">Male</button>
+                  <button class="tab-pill" onclick="setGender('Female', this)">Female</button>
+                  <button class="tab-pill" onclick="setGender('Other', this)">Other</button>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Occupation / Primary Income Source</label>
+                <select class="form-input" id="calc-occupation">
+                  <option value="Farmer">Small / Marginal Farmer</option>
+                  <option value="SelfEmployed">Self Employed / Artisan</option>
+                  <option value="DailyWage">Daily Wage / Construction Worker</option>
+                  <option value="Student">Student / Unemployed Youth</option>
+                  <option value="Salaried">Private / Formal Sector Employee</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Social Category</label>
+                <div class="tab-pills">
+                  <button class="tab-pill" onclick="setCategory('General', this)">General</button>
+                  <button class="tab-pill active" onclick="setCategory('OBC', this)">OBC</button>
+                  <button class="tab-pill" onclick="setCategory('SC', this)">SC</button>
+                  <button class="tab-pill" onclick="setCategory('ST', this)">ST</button>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Annual Family Income</label>
+                <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; color: var(--gov-navy-primary); margin-bottom: 4px;">
+                  <span>Up to:</span>
+                  <span id="income-val-text">₹ 1,50,000 / year</span>
+                </div>
+                <input type="range" min="30000" max="1000000" step="20000" value="150000" style="width: 100%; accent-color: var(--gov-navy-primary);" oninput="document.getElementById('income-val-text').innerText = '₹ ' + Number(this.value).toLocaleString('en-IN') + ' / year'">
+              </div>
+
+              <button class="btn-primary" onclick="runEligibilityEvaluation()">
+                ⚡ Calculate My Eligible Schemes
+              </button>
+
+              <div id="eligibility-results-box" style="margin-top: 14px; display: none;">
+                <div style="background: #E8F5EE; border: 1.5px solid #0D7A3E; border-radius: 12px; padding: 12px;">
+                  <div style="font-size: 14px; font-weight: 800; color: #0D7A3E;">🎉 You qualify for 12 Welfare Schemes!</div>
+                  <div style="font-size: 11px; color: #166534; margin-top: 2px;">Estimated Annual Benefit: <strong>₹ 74,000 / year</strong></div>
+                  <div style="margin-top: 10px;">
+                    <button class="btn-primary" style="height: 36px; font-size: 11px; background: #0D7A3E;" onclick="switchScreen('screen-schemes')">
+                      View Eligible Schemes (12) →
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 6. SCREEN: MY APPLICATIONS -->
+          <section class="screen" id="screen-applications">
+            <div class="gov-top-banner">
+              <div class="gov-flag-stripe"></div>
+              <div class="gov-banner-row">
+                <div class="gov-identity">
+                  <div class="emblem-icon">📝</div>
+                  <div class="gov-titles">
+                    <h1>My Applications</h1>
+                    <p>Real-time DBT Benefit & Service Tracker</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style="padding: 12px 16px;">
+              <div class="card" style="border-left: 4px solid var(--gov-green);">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                  <span class="badge badge-central">PM KISAN</span>
+                  <span class="badge badge-dbt">DISBURSED</span>
+                </div>
+                <div style="font-size: 13px; font-weight: 800; color: var(--text-primary);">PM Kisan 16th Installment</div>
+                <div style="font-size: 11px; color: #64748B; margin-top: 2px;">Ref: PMK-2024-UP-94821</div>
+                <div style="margin-top: 10px; font-size: 11px; font-weight: 600; color: var(--gov-green);">
+                  ✓ ₹2,000 credited to SBI A/c ***4821 via DBT on 15 Feb 2024
+                </div>
+              </div>
+
+              <div class="card" style="border-left: 4px solid var(--gov-saffron);">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                  <span class="badge badge-central">AYUSHMAN</span>
+                  <span class="badge" style="background: #FEF3C7; color: #D97706;">UNDER REVIEW</span>
+                </div>
+                <div style="font-size: 13px; font-weight: 800; color: var(--text-primary);">Ayushman Bharat Golden Card</div>
+                <div style="font-size: 11px; color: #64748B; margin-top: 2px;">Ref: AB-PMJAY-882104</div>
+                <div style="margin-top: 8px; font-size: 11px; color: #475569;">
+                  ⏳ Document verification in progress by State Nodal Agency (UP). Expected resolution: 3 days.
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 7. SCREEN: DOCUMENTS & DIGILOCKER -->
+          <section class="screen" id="screen-documents">
+            <div class="gov-top-banner">
+              <div class="gov-flag-stripe"></div>
+              <div class="gov-banner-row">
+                <div class="gov-identity">
+                  <div class="emblem-icon">📁</div>
+                  <div class="gov-titles">
+                    <h1>Citizen Document Vault</h1>
+                    <p>DigiLocker Verified Credentials</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style="padding: 12px 16px;">
+              <div style="background: linear-gradient(135deg, #1E40AF 0%, #002B49 100%); color: #FFFFFF; border-radius: 14px; padding: 14px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between;">
+                <div>
+                  <div style="font-size: 13px; font-weight: 800;">DigiLocker Connected</div>
+                  <div style="font-size: 10px; opacity: 0.85;">Syncs verified identity documents automatically</div>
+                </div>
+                <button class="mini-badge-btn" style="background: #FFFFFF; color: #002B49;" onclick="showToast('DigiLocker Synced successfully!')">🔄 Sync Now</button>
+              </div>
+
+              <div class="card" style="display: flex; align-items: center; justify-content: space-between;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <span style="font-size: 24px;">🆔</span>
+                  <div>
+                    <div style="font-size: 12px; font-weight: 800;">Aadhaar Card</div>
+                    <div style="font-size: 10px; color: #64748B;">UIDAI Verified • XXXX-XXXX-9482</div>
+                  </div>
+                </div>
+                <span class="badge badge-dbt">VERIFIED</span>
+              </div>
+
+              <div class="card" style="display: flex; align-items: center; justify-content: space-between;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <span style="font-size: 24px;">💳</span>
+                  <div>
+                    <div style="font-size: 12px; font-weight: 800;">PAN Card</div>
+                    <div style="font-size: 10px; color: #64748B;">Income Tax Dept • ABCPS****K</div>
+                  </div>
+                </div>
+                <span class="badge badge-dbt">VERIFIED</span>
+              </div>
+
+              <div class="card" style="display: flex; align-items: center; justify-content: space-between;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <span style="font-size: 24px;">🌾</span>
+                  <div>
+                    <div style="font-size: 12px; font-weight: 800;">Land Ownership Record (Khata/Khasra)</div>
+                    <div style="font-size: 10px; color: #64748B;">Revenue Board • Khatiyan #241</div>
+                  </div>
+                </div>
+                <span class="badge badge-dbt">VERIFIED</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- 8. SCREEN: STATE SELECTION (36 States & UTs) -->
+          <section class="screen" id="screen-state">
+            <div class="gov-top-banner">
+              <div class="gov-flag-stripe"></div>
+              <div class="gov-banner-row">
+                <div class="gov-identity">
+                  <div class="emblem-icon">🗺️</div>
+                  <div class="gov-titles">
+                    <h1>Select Resident State / UT</h1>
+                    <p>Personalize State-Specific Schemes</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="search-box-wrap">
+              <input type="text" class="search-input" placeholder="Search state or UT (e.g. Uttar Pradesh, Maharashtra)..." oninput="filterStateList(this.value)">
+            </div>
+
+            <div class="state-list" id="state-items-container">
+              <!-- Dynamically populated with all 36 States & UTs -->
+            </div>
+          </section>
+
+          <!-- 9. SCREEN: LOGIN / SIGNUP -->
+          <section class="screen" id="screen-login">
+            <div class="gov-top-banner">
+              <div class="gov-flag-stripe"></div>
+              <div class="gov-banner-row">
+                <div class="gov-identity">
+                  <div class="emblem-icon">🔐</div>
+                  <div class="gov-titles">
+                    <h1>Citizen Identity Login</h1>
+                    <p>Secure Single Sign-On (MeriPehchaan)</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="auth-container">
+              <div class="tab-pills">
+                <button class="tab-pill active" id="tab-otp-btn" onclick="setAuthTab('OTP')">With Mobile OTP</button>
+                <button class="tab-pill" id="tab-pass-btn" onclick="setAuthTab('PASS')">With Password</button>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">10-Digit Mobile Number</label>
+                <input type="tel" class="form-input" id="auth-mobile-input" value="9876543210" placeholder="Enter mobile number">
+              </div>
+
+              <div id="otp-group-field" class="form-group">
+                <label class="form-label">Enter 6-Digit OTP</label>
+                <input type="text" class="form-input" id="auth-otp-input" value="123456" placeholder="Enter OTP (demo: 123456)">
+                <div style="font-size: 10px; color: #0D7A3E; margin-top: 4px; font-weight: 600;">✓ OTP auto-sent to +91 9876543210 (Demo Code: 123456)</div>
+              </div>
+
+              <button class="btn-primary" onclick="simulateLoginSuccess()">
+                Sign In to JanSaarthi
+              </button>
+
+              <button class="btn-outline" onclick="simulateGuestMode()">
+                Continue as Guest Explorer →
+              </button>
+            </div>
+          </section>
+
+          <!-- 10. SCREEN: PROFILE & SETTINGS -->
+          <section class="screen" id="screen-profile">
+            <div class="gov-top-banner">
+              <div class="gov-flag-stripe"></div>
+              <div class="gov-banner-row">
+                <div class="gov-identity">
+                  <div class="emblem-icon">👤</div>
+                  <div class="gov-titles">
+                    <h1>Citizen Profile & Settings</h1>
+                    <p>Preferences & Accessibility</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style="padding: 12px 16px;">
+              <div class="card" style="display: flex; align-items: center; gap: 12px;">
+                <div style="width: 48px; height: 48px; border-radius: 50%; background: #EBF3FA; display: flex; align-items: center; justify-content: center; font-size: 24px;">👨‍🌾</div>
+                <div>
+                  <div style="font-size: 14px; font-weight: 800;">Ramesh Kumar Sharma</div>
+                  <div style="font-size: 11px; color: #64748B;">+91 98765 43210 • ramesh@email.com</div>
+                  <div style="font-size: 10px; color: var(--gov-green); font-weight: 700; margin-top: 2px;">✓ Verified Citizen Identity</div>
+                </div>
+              </div>
+
+              <div class="card">
+                <div style="font-size: 12px; font-weight: 800; color: var(--gov-navy-primary); margin-bottom: 10px;">ACCESSIBILITY & PREFERENCES</div>
+                
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                  <div>
+                    <div style="font-size: 12px; font-weight: 700;">Text Size (बड़ा टेक्स्ट)</div>
+                    <div style="font-size: 10px; color: #64748B;">Increase readability on mobile</div>
+                  </div>
+                  <button class="mini-badge-btn" style="background: var(--gov-navy-primary);" onclick="toggleFontScale()">Toggle A+</button>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                  <div>
+                    <div style="font-size: 12px; font-weight: 700;">Preferred Language (भाषा)</div>
+                    <div style="font-size: 10px; color: #64748B;" id="profile-lang-desc">English</div>
+                  </div>
+                  <button class="mini-badge-btn" style="background: var(--gov-navy-primary);" onclick="toggleLanguage()">Change</button>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <div>
+                    <div style="font-size: 12px; font-weight: 700;">Resident State (राज्य)</div>
+                    <div style="font-size: 10px; color: #64748B;" id="profile-state-desc">All India / Uttar Pradesh</div>
+                  </div>
+                  <button class="mini-badge-btn" style="background: var(--gov-navy-primary);" onclick="switchScreen('screen-state')">Change</button>
+                </div>
+              </div>
+
+              <div class="card">
+                <div style="font-size: 12px; font-weight: 800; color: var(--gov-navy-primary); margin-bottom: 6px;">CITIZEN HELPDESK & SUPPORT</div>
+                <div style="font-size: 11px; color: #475569;">📞 National Welfare Toll-Free: <strong>14443 / 1800-11-2024</strong></div>
+                <div style="font-size: 10px; color: #94A3B8; margin-top: 4px;">National Informatics Centre (NIC) • Digital Personal Data Protection (DPDP) Act Compliant</div>
+              </div>
+
+              <button class="btn-outline" style="border-color: #EF4444; color: #DC2626;" onclick="switchScreen('screen-login')">
+                Log Out of JanSaarthi
+              </button>
+            </div>
+          </section>
+
+        </div> <!-- /screens-viewport -->
+
+        <!-- Bottom Navigation Bar (5 Primary Tabs) -->
+        <nav class="bottom-nav">
+          <button class="nav-item active" id="nav-btn-home" onclick="switchNavTab('screen-home', this)">
+            <div class="nav-icon-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            </div>
+            <span>Home</span>
+          </button>
+
+          <button class="nav-item" id="nav-btn-schemes" onclick="switchNavTab('screen-schemes', this)">
+            <div class="nav-icon-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            </div>
+            <span>Schemes</span>
+          </button>
+
+          <button class="nav-item" id="nav-btn-applications" onclick="switchNavTab('screen-applications', this)">
+            <div class="nav-icon-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            </div>
+            <span>Applications</span>
+          </button>
+
+          <button class="nav-item" id="nav-btn-documents" onclick="switchNavTab('screen-documents', this)">
+            <div class="nav-icon-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+            </div>
+            <span>Documents</span>
+          </button>
+
+          <button class="nav-item" id="nav-btn-profile" onclick="switchNavTab('screen-profile', this)">
+            <div class="nav-icon-box">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <span>Profile</span>
+          </button>
+        </nav>
+
+        <!-- Scheme Details Modal Sheet -->
+        <div class="modal-overlay" id="scheme-details-modal" onclick="closeSchemeModal(event)">
+          <div class="modal-sheet" onclick="event.stopPropagation()">
+            <div class="sheet-handle"></div>
+            
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+              <span class="badge badge-central" id="modal-badge">CENTRAL SCHEME</span>
+              <button style="background: none; border: none; font-size: 16px; cursor: pointer; color: #64748B;" onclick="closeSchemeModalDirect()">✕</button>
+            </div>
+
+            <h2 style="font-size: 16px; font-weight: 800; color: var(--gov-navy-primary); margin-bottom: 4px;" id="modal-title">PM Kisan Samman Nidhi</h2>
+            <div style="font-size: 11px; color: #64748B; margin-bottom: 12px;" id="modal-dept">Ministry of Agriculture & Farmers Welfare</div>
+
+            <div class="detail-section">
+              <div class="detail-h3">💰 Benefit Entitlement</div>
+              <div style="background: #E8F5EE; border-left: 3px solid #0D7A3E; padding: 8px 10px; border-radius: 6px; font-size: 12px; font-weight: 700; color: #166534;" id="modal-benefit">
+                ₹6,000 per year direct income support in 3 equal installments of ₹2,000.
+              </div>
+            </div>
+
+            <div class="detail-section">
+              <div class="detail-h3">👥 Eligibility Criteria</div>
+              <ul class="detail-bullet-list" id="modal-eligibility">
+                <li>All landholding farmer families having cultivable land in their names.</li>
+                <li>Valid Aadhaar linked to bank account with active DBT mandate.</li>
+                <li>Excludes institutional landholders and constitutional post holders.</li>
+              </ul>
+            </div>
+
+            <div class="detail-section">
+              <div class="detail-h3">📄 Required Documents</div>
+              <ul class="detail-bullet-list" id="modal-docs">
+                <li>Aadhaar Card (Linked with Mobile)</li>
+                <li>Land Record Certificate (Khata / Khasra / 7/12)</li>
+                <li>Bank Account Passbook with IFSC code</li>
+              </ul>
+            </div>
+
+            <div class="detail-section">
+              <div class="detail-h3">⚡ How to Apply</div>
+              <ul class="detail-bullet-list" id="modal-steps">
+                <li>Step 1: Visit official portal (pmkisan.gov.in) or visit nearest CSC Centre.</li>
+                <li>Step 2: Enter Aadhaar number and complete OTP biometric authentication.</li>
+                <li>Step 3: Upload land records and submit for District Officer verification.</li>
+              </ul>
+            </div>
+
+            <button class="btn-primary" style="margin-top: 14px; background: var(--gov-saffron);" onclick="applySchemeOnline()">
+              🚀 Apply Online via National Portal
+            </button>
+          </div>
+        </div>
+
+        <!-- Toast Floating Banner -->
+        <div class="toast-msg" id="toast-element">
+          <span>✓</span>
+          <span id="toast-text">Message</span>
+        </div>
+
+      </div> <!-- /phone-screen -->
+    </div> <!-- /phone-frame -->
+  </main>
+
+  <script>
+    // State & Data store
+    let currentLanguage = 'EN';
+    let isLargeFont = false;
+    let selectedState = 'All India';
+
+    const SCHEMES_DATABASE = [
+      {
+        id: 'CEN-01',
+        titleEn: 'PM Kisan Samman Nidhi',
+        titleHi: 'प्रधानमंत्री किसान सम्मान निधि',
+        deptEn: 'Ministry of Agriculture & Farmers Welfare',
+        deptHi: 'कृषि एवं किसान कल्याण मंत्रालय (भारत सरकार)',
+        benefitEn: '₹6,000 per year direct income support in 3 installments',
+        benefitHi: '₹6,000 प्रति वर्ष 3 समान किस्तों में बैंक खाते में सीधा अंतरण (DBT)',
+        level: 'CENTRAL',
+        category: 'Agriculture',
+        isDbt: true,
+        eligibilityEn: ['All landholding farmer families with cultivable land.', 'Active Aadhaar-linked bank account.'],
+        eligibilityHi: ['कृषि योग्य भूमि रखने वाले सभी पात्र किसान परिवार।', 'आधार-लिंक्ड बैंक खाता।'],
+        docsEn: ['Aadhaar Card', 'Land Ownership Record (Khata/Khasra)', 'Bank Passbook'],
+        docsHi: ['आधार कार्ड', 'भूमि रिकॉर्ड (खसरा/खतौनी)', 'बैंक पासबुक'],
+        stepsEn: ['Visit pmkisan.gov.in or CSC centre', 'Complete e-KYC', 'State verification & DBT release'],
+        stepsHi: ['pmkisan.gov.in पोर्टल पर जाएं', 'ई-केवाईसी पूर्ण करें', 'सत्यापन उपरांत किस्त बैंक में जमा']
+      },
+      {
+        id: 'CEN-02',
+        titleEn: 'Ayushman Bharat PM-JAY',
+        titleHi: 'आयुष्मान भारत - प्रधानमंत्री जन आरोग्य योजना',
+        deptEn: 'Ministry of Health & Family Welfare',
+        deptHi: 'स्वास्थ्य एवं परिवार कल्याण मंत्रालय',
+        benefitEn: '₹5,00,000 per family per year cashless hospitalization coverage',
+        benefitHi: 'प्रति परिवार प्रति वर्ष ₹5,00,000 तक का कैशलेस स्वास्थ्य बीमा',
+        level: 'CENTRAL',
+        category: 'Healthcare',
+        isDbt: true,
+        eligibilityEn: ['Families listed in SECC 2011 database.', 'Rural families living in kutcha houses or daily wage workers.'],
+        eligibilityHi: ['एसईसीसी 2011 डेटाबेस में सूचीबद्ध पात्र परिवार।'],
+        docsEn: ['Aadhaar Card / Ration Card', 'Mobile Number for OTP verification'],
+        docsHi: ['आधार कार्ड / राशन कार्ड', 'सत्यापन हेतु मोबाइल नंबर'],
+        stepsEn: ['Check eligibility at beneficiary.nha.gov.in', 'Visit Empanelled Hospital with Aadhaar', 'Receive Ayushman Golden Card'],
+        stepsHi: ['beneficiary.nha.gov.in पर पात्रता जांचें', 'अस्पताल में आधार दिखाएं', 'गोल्डन कार्ड प्राप्त करें']
+      },
+      {
+        id: 'CEN-03',
+        titleEn: 'PM Awas Yojana (Urban & Gramin)',
+        titleHi: 'प्रधानमंत्री आवास योजना (शहरी एवं ग्रामीण)',
+        deptEn: 'Ministry of Housing & Urban Affairs',
+        deptHi: 'आवासन और शहरी कार्य मंत्रालय',
+        benefitEn: 'Financial assistance of ₹1.2 to ₹2.5 Lakh for pucca house construction',
+        benefitHi: 'पक्के मकान निर्माण हेतु ₹1.2 लाख से ₹2.5 लाख तक की आर्थिक सहायता',
+        level: 'CENTRAL',
+        category: 'Housing',
+        isDbt: true,
+        eligibilityEn: ['Homeless families or families with kutcha/dilapidated house.', 'Must not own a pucca house anywhere in India.'],
+        eligibilityHi: ['बिना पक्के मकान वाले बेघर या कच्चे घरों में रहने वाले परिवार।'],
+        docsEn: ['Aadhaar Card', 'Ration Card', 'Bank Account details', 'Land possession papers'],
+        docsHi: ['आधार कार्ड', 'राशन कार्ड', 'बैंक खाता विवरण', 'भूमि दस्तावेज'],
+        stepsEn: ['Apply through Gram Panchayat or PMAY portal', 'Geo-tagging inspection of site', 'Direct DBT release in milestone stages'],
+        stepsHi: ['ग्राम पंचायत अथवा पोर्टल के माध्यम से आवेदन करें', 'जियो-टैगिंग सत्यापन', 'चरणबद्ध DBT किस्तें जारी']
+      },
+      {
+        id: 'ST-01',
+        titleEn: 'Mukhyamantri Ladli Behna Yojana',
+        titleHi: 'मुख्यमंत्री लाड़ली बहना योजना',
+        deptEn: 'Women & Child Development (Madhya Pradesh)',
+        deptHi: 'महिला एवं बाल विकास विभाग (मध्य प्रदेश)',
+        benefitEn: '₹1,250 monthly direct financial assistance into woman\'s bank account',
+        benefitHi: 'प्रतिमाह ₹1,250 की आर्थिक सहायता सीधे महिला के खाते में',
+        level: 'STATE',
+        state: 'Madhya Pradesh',
+        category: 'Women & Child',
+        isDbt: true,
+        eligibilityEn: ['Resident woman of Madhya Pradesh aged 21-60 years.', 'Annual family income under ₹2.5 Lakhs.'],
+        eligibilityHi: ['मध्य प्रदेश की 21-60 वर्ष आयु की निवासी महिलाएं।'],
+        docsEn: ['Samagra ID', 'Aadhaar Card with DBT enabled bank a/c'],
+        docsHi: ['समग्र आईडी', 'डीबीटी सक्षम आधार लिंक्ड बैंक खाता'],
+        stepsEn: ['Fill form at Gram Panchayat camp', 'Biometric e-KYC', 'Monthly DBT credit on 10th of every month'],
+        stepsHi: ['पंचायत कैंप में फॉर्म भरें', 'ई-केवाईसी करवाएं', 'हर माह 10 तारीख को बैंक खाते में अंतरण']
+      },
+      {
+        id: 'CEN-04',
+        titleEn: 'PM Ujjwala Yojana 2.0',
+        titleHi: 'प्रधानमंत्री उज्ज्वला योजना 2.0',
+        deptEn: 'Ministry of Petroleum & Natural Gas',
+        deptHi: 'पेट्रोलियम एवं प्राकृतिक गैस मंत्रालय',
+        benefitEn: 'Free LPG Connection + First Cylinder & Stove free + ₹300 subsidy per refill',
+        benefitHi: 'मुफ्त एलपीजी गैस कनेक्शन + पहला सिलेंडर एवं चूल्हा निःशुल्क + सब्सिडी',
+        level: 'CENTRAL',
+        category: 'Social Security',
+        isDbt: true,
+        eligibilityEn: ['Adult woman of poor household lacking an active LPG connection.'],
+        eligibilityHi: ['गरीब परिवारों की वयस्क महिला सदस्य।'],
+        docsEn: ['Aadhaar Card of applicant', 'Ration Card of family', 'Bank Account details'],
+        docsHi: ['आवेदिका का आधार कार्ड', 'राशन कार्ड', 'बैंक खाता'],
+        stepsEn: ['Apply at nearest LPG distributor or pmuy.gov.in', 'Submit e-KYC', 'Immediate connection release'],
+        stepsHi: ['गैस एजेंसी अथवा pmuy.gov.in पर आवेदन करें', 'तुरंत कनेक्शन प्राप्त करें']
+      }
+    ];
+
+    const ALL_36_STATES_UTS = [
+      { name: "Andhra Pradesh", type: "State", capital: "Amaravati", schemes: 48 },
+      { name: "Arunachal Pradesh", type: "State", capital: "Itanagar", schemes: 24 },
+      { name: "Assam", type: "State", capital: "Dispur", schemes: 41 },
+      { name: "Bihar", type: "State", capital: "Patna", schemes: 62 },
+      { name: "Chhattisgarh", type: "State", capital: "Raipur", schemes: 38 },
+      { name: "Goa", type: "State", capital: "Panaji", schemes: 26 },
+      { name: "Gujarat", type: "State", capital: "Gandhinagar", schemes: 54 },
+      { name: "Haryana", type: "State", capital: "Chandigarh", schemes: 47 },
+      { name: "Himachal Pradesh", type: "State", capital: "Shimla", schemes: 33 },
+      { name: "Jharkhand", type: "State", capital: "Ranchi", schemes: 40 },
+      { name: "Karnataka", type: "State", capital: "Bengaluru", schemes: 58 },
+      { name: "Kerala", type: "State", capital: "Thiruvananthapuram", schemes: 45 },
+      { name: "Madhya Pradesh", type: "State", capital: "Bhopal", schemes: 64 },
+      { name: "Maharashtra", type: "State", capital: "Mumbai", schemes: 68 },
+      { name: "Manipur", type: "State", capital: "Imphal", schemes: 22 },
+      { name: "Meghalaya", type: "State", capital: "Shillong", schemes: 21 },
+      { name: "Mizoram", type: "State", capital: "Aizawl", schemes: 19 },
+      { name: "Nagaland", type: "State", capital: "Kohima", schemes: 20 },
+      { name: "Odisha", type: "State", capital: "Bhubaneswar", schemes: 52 },
+      { name: "Punjab", type: "State", capital: "Chandigarh", schemes: 43 },
+      { name: "Rajasthan", type: "State", capital: "Jaipur", schemes: 65 },
+      { name: "Sikkim", type: "State", capital: "Gangtok", schemes: 18 },
+      { name: "Tamil Nadu", type: "State", capital: "Chennai", schemes: 71 },
+      { name: "Telangana", type: "State", capital: "Hyderabad", schemes: 50 },
+      { name: "Tripura", type: "State", capital: "Agartala", schemes: 25 },
+      { name: "Uttar Pradesh", type: "State", capital: "Lucknow", schemes: 86 },
+      { name: "Uttarakhand", type: "State", capital: "Dehradun", schemes: 34 },
+      { name: "West Bengal", type: "State", capital: "Kolkata", schemes: 60 },
+      { name: "Andaman & Nicobar", type: "UT", capital: "Port Blair", schemes: 16 },
+      { name: "Chandigarh", type: "UT", capital: "Chandigarh", schemes: 23 },
+      { name: "Dadra & Nagar Haveli and Daman & Diu", type: "UT", capital: "Daman", schemes: 18 },
+      { name: "Delhi (NCT)", type: "UT", capital: "New Delhi", schemes: 49 },
+      { name: "Jammu & Kashmir", type: "UT", capital: "Srinagar / Jammu", schemes: 37 },
+      { name: "Ladakh", type: "UT", capital: "Leh", schemes: 15 },
+      { name: "Lakshadweep", type: "UT", capital: "Kavaratti", schemes: 12 },
+      { name: "Puducherry", type: "UT", capital: "Puducherry", schemes: 25 }
+    ];
+
+    const GOVERNMENT_CATEGORIES = [
+      { name: "Agriculture & Rural", icon: "🌾", count: 42, desc: "Farming, crop insurance, fertilizer subsidies" },
+      { name: "Banking, Financial & Insurance", icon: "🏦", count: 28, desc: "Pensions, micro-credit, Jan Dhan accounts" },
+      { name: "Business & Entrepreneurship", icon: "💼", count: 35, desc: "MUDRA loans, MSME incentives, startup seed" },
+      { name: "Education & Learning", icon: "🎓", count: 56, desc: "Pre/Post matric scholarships, free coaching" },
+      { name: "Health & Wellness", icon: "🏥", count: 31, desc: "Ayushman Bharat, free medicines, maternal health" },
+      { name: "Housing & Shelter", icon: "🏠", count: 18, desc: "PMAY Urban, PMAY Gramin, rental housing" },
+      { name: "Public Safety, Law & Justice", icon: "⚖️", count: 12, desc: "Free legal aid, victim compensation" },
+      { name: "Science, IT & Communications", icon: "💻", count: 14, desc: "Digital literacy, PMGDisha, skill certs" },
+      { name: "Skills & Employment", icon: "🛠️", count: 29, desc: "PM Kaushal Vikas, apprentice stipends, Rozgar" },
+      { name: "Social Welfare & Empowerment", icon: "🤝", count: 48, desc: "Divyangjan aid, elderly pension, SC/ST welfare" },
+      { name: "Sports & Culture", icon: "🏆", count: 15, desc: "Khelo India scholarships, artist pensions" },
+      { name: "Transport & Infrastructure", icon: "🚆", count: 21, desc: "E-rickshaw subsidy, rural roads connectivity" },
+      { name: "Travel & Tourism", icon: "✈️", count: 10, desc: "Pilgrimage schemes, homestay incentives" },
+      { name: "Utility & Sanitation", icon: "🚰", count: 22, desc: "Har Ghar Jal, Swachh Bharat toilet grants" },
+      { name: "Women and Child", icon: "👩‍👧", count: 39, desc: "Sukanya Samriddhi, Poshan Abhiyaan, Kanya Sumangala" }
+    ];
+
+    const MINISTRIES_DATA = [
+      { name: "Ministry of Agriculture & Farmers Welfare", count: 24, icon: "🌾", acronym: "MoA&FW" },
+      { name: "Ministry of Health & Family Welfare", count: 19, icon: "🏥", acronym: "MoHFW" },
+      { name: "Ministry of Housing & Urban Affairs", count: 15, icon: "🏠", acronym: "MoHUA" },
+      { name: "Ministry of Rural Development", count: 28, icon: "🚜", acronym: "MoRD" },
+      { name: "Ministry of Education", count: 32, icon: "🎓", acronym: "MoE" },
+      { name: "Ministry of Social Justice & Empowerment", count: 36, icon: "🤝", acronym: "MoSJE" },
+      { name: "Ministry of Women & Child Development", count: 22, icon: "👩‍👧", acronym: "MoWCD" },
+      { name: "Ministry of Finance", count: 17, icon: "💰", acronym: "MoF" }
+    ];
+
+    // Initialize application
+    window.addEventListener('DOMContentLoaded', () => {
+      renderSchemes();
+      renderCategories();
+      renderMinistries();
+      renderStates();
+      updateClock();
+      setInterval(updateClock, 30000);
+    });
+
+    function updateClock() {
+      const now = new Date();
+      const hrs = String(now.getHours()).padStart(2, '0');
+      const mins = String(now.getMinutes()).padStart(2, '0');
+      document.getElementById('live-clock').innerText = `${hrs}:${mins}`;
+    }
+
+    // Switch between screens
+    function switchScreen(screenId, btnElement = null) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      const target = document.getElementById(screenId);
+      if (target) {
+        target.classList.add('active');
+        document.querySelector('.screens-viewport').scrollTop = 0;
+      }
+
+      // Update Quick studio pills
+      if (btnElement) {
+        document.querySelectorAll('.quick-pill').forEach(p => p.classList.remove('active'));
+        btnElement.classList.add('active');
+      }
+
+      // Sync Bottom Nav tabs if matching
+      const navMap = {
+        'screen-home': 'nav-btn-home',
+        'screen-schemes': 'nav-btn-schemes',
+        'screen-applications': 'nav-btn-applications',
+        'screen-documents': 'nav-btn-documents',
+        'screen-profile': 'nav-btn-profile'
+      };
+
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      if (navMap[screenId]) {
+        const navBtn = document.getElementById(navMap[screenId]);
+        if (navBtn) navBtn.classList.add('active');
+      }
+    }
+
+    function switchNavTab(screenId, navElement) {
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      navElement.classList.add('active');
+      switchScreen(screenId);
+    }
+
+    // Language Toggle
+    function toggleLanguage() {
+      currentLanguage = (currentLanguage === 'EN') ? 'HI' : 'EN';
+      document.getElementById('current-lang-text').innerText = currentLanguage === 'EN' ? 'English (EN)' : 'हिंदी (HI)';
+      document.getElementById('mini-lang-label').innerText = currentLanguage === 'EN' ? 'हिं' : 'EN';
+      document.getElementById('profile-lang-desc').innerText = currentLanguage === 'EN' ? 'English' : 'हिंदी (Hindi)';
+      renderSchemes();
+      showToast(currentLanguage === 'EN' ? 'Language switched to English' : 'भाषा हिंदी में बदली गई');
+    }
+
+    // Font Scale Toggle
+    function toggleFontScale() {
+      isLargeFont = !isLargeFont;
+      const root = document.documentElement;
+      if (isLargeFont) {
+        root.style.setProperty('--font-scale', '1.15');
+        document.getElementById('phone-frame-element').style.fontSize = '1.08rem';
+        document.getElementById('font-scale-text').innerText = 'Text Size: Large A+';
+        showToast('Accessibility: Large Text Mode Active');
+      } else {
+        root.style.setProperty('--font-scale', '1.0');
+        document.getElementById('phone-frame-element').style.fontSize = '1rem';
+        document.getElementById('font-scale-text').innerText = 'Text Size: Normal';
+        showToast('Accessibility: Normal Text Mode');
+      }
+    }
+
+    // Frame size expand
+    function toggleFrameSize() {
+      const frame = document.getElementById('phone-frame-element');
+      frame.classList.toggle('fullscreen-mode');
+    }
+
+    // Render Schemes list
+    function renderSchemes(filter = 'ALL', searchQuery = '') {
+      const homeContainer = document.getElementById('home-schemes-container');
+      const allContainer = document.getElementById('all-schemes-container');
+
+      const isHindi = currentLanguage === 'HI';
+
+      const filtered = SCHEMES_DATABASE.filter(s => {
+        const matchesFilter = (filter === 'ALL') ||
+          (filter === 'CENTRAL' && s.level === 'CENTRAL') ||
+          (filter === 'STATE' && s.level === 'STATE') ||
+          (filter === 'DBT' && s.isDbt);
+
+        const q = searchQuery.toLowerCase().trim();
+        const matchesSearch = !q ||
+          s.titleEn.toLowerCase().includes(q) ||
+          s.titleHi.toLowerCase().includes(q) ||
+          s.deptEn.toLowerCase().includes(q) ||
+          s.benefitEn.toLowerCase().includes(q);
+
+        return matchesFilter && matchesSearch;
+      });
+
+      const buildHtml = (items) => items.map(scheme => `
+        <div class="scheme-card" onclick="openSchemeModal('${scheme.id}')">
+          <div class="scheme-card-top">
+            <span class="badge ${scheme.level === 'CENTRAL' ? 'badge-central' : 'badge-state'}">
+              ${scheme.level === 'CENTRAL' ? (isHindi ? 'केंद्रीय योजना' : 'Central Scheme') : (isHindi ? 'राज्य योजना' : 'State Scheme')}
+            </span>
+            ${scheme.isDbt ? '<span class="badge badge-dbt">DBT Active</span>' : ''}
+          </div>
+          <div class="scheme-title">${isHindi ? scheme.titleHi : scheme.titleEn}</div>
+          <div class="scheme-dept">${isHindi ? scheme.deptHi : scheme.deptEn}</div>
+          <div class="scheme-benefit-box">
+            💰 ${isHindi ? scheme.benefitHi : scheme.benefitEn}
+          </div>
+          <div class="scheme-card-footer">
+            <span style="font-size: 10px; color: #64748B; font-weight: 600;">Category: ${scheme.category}</span>
+            <span style="font-size: 11px; font-weight: 700; color: var(--gov-navy-primary);">View Details →</span>
+          </div>
+        </div>
+      `).join('');
+
+      if (homeContainer) homeContainer.innerHTML = buildHtml(SCHEMES_DATABASE.slice(0, 3));
+      if (allContainer) allContainer.innerHTML = buildHtml(filtered);
+    }
+
+    function onSearchInput(val) {
+      renderSchemes('ALL', val);
+    }
+
+    function setSchemeFilter(filterType, btn) {
+      document.querySelectorAll('.filter-chips-row .filter-chip').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      renderSchemes(filterType);
+    }
+
+    function filterByCat(catName) {
+      switchScreen('screen-schemes');
+      const searchBox = document.getElementById('scheme-search-input');
+      if (searchBox) {
+        searchBox.value = catName;
+        renderSchemes('ALL', catName);
+      }
+    }
+
+    // Modal Scheme Details
+    function openSchemeModal(schemeId) {
+      const scheme = SCHEMES_DATABASE.find(s => s.id === schemeId);
+      if (!scheme) return;
+
+      const isHindi = currentLanguage === 'HI';
+      document.getElementById('modal-badge').innerText = scheme.level === 'CENTRAL' ? (isHindi ? 'केंद्रीय योजना' : 'CENTRAL SCHEME') : (isHindi ? 'राज्य योजना' : 'STATE SCHEME');
+      document.getElementById('modal-title').innerText = isHindi ? scheme.titleHi : scheme.titleEn;
+      document.getElementById('modal-dept').innerText = isHindi ? scheme.deptHi : scheme.deptEn;
+      document.getElementById('modal-benefit').innerText = isHindi ? scheme.benefitHi : scheme.benefitEn;
+
+      const eligList = isHindi ? scheme.eligibilityHi : scheme.eligibilityEn;
+      document.getElementById('modal-eligibility').innerHTML = eligList.map(item => `<li>${item}</li>`).join('');
+
+      const docsList = isHindi ? scheme.docsHi : scheme.docsEn;
+      document.getElementById('modal-docs').innerHTML = docsList.map(item => `<li>${item}</li>`).join('');
+
+      const stepsList = isHindi ? scheme.stepsHi : scheme.stepsEn;
+      document.getElementById('modal-steps').innerHTML = stepsList.map(item => `<li>${item}</li>`).join('');
+
+      document.getElementById('scheme-details-modal').classList.add('active');
+    }
+
+    function closeSchemeModal(event) {
+      document.getElementById('scheme-details-modal').classList.remove('active');
+    }
+
+    function closeSchemeModalDirect() {
+      document.getElementById('scheme-details-modal').classList.remove('active');
+    }
+
+    function applySchemeOnline() {
+      closeSchemeModalDirect();
+      showToast('Redirecting to Government Application Form...');
+      setTimeout(() => {
+        switchScreen('screen-applications');
+      }, 600);
+    }
+
+    // Categories
+    function renderCategories() {
+      const container = document.getElementById('categories-list-container');
+      if (!container) return;
+
+      container.innerHTML = GOVERNMENT_CATEGORIES.map(cat => `
+        <div class="card" style="display: flex; align-items: center; justify-content: space-between; cursor: pointer;" onclick="filterByCat('${cat.name}')">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="width: 40px; height: 40px; border-radius: 10px; background: #F1F5F9; display: flex; align-items: center; justify-content: center; font-size: 20px;">
+              ${cat.icon}
+            </div>
+            <div>
+              <div style="font-size: 13px; font-weight: 800; color: var(--gov-navy-primary);">${cat.name}</div>
+              <div style="font-size: 10px; color: #64748B;">${cat.desc}</div>
+            </div>
+          </div>
+          <span class="badge" style="background: #E2E8F0; color: #334155;">${cat.count} Schemes</span>
+        </div>
+      `).join('');
+    }
+
+    // Ministries
+    function renderMinistries() {
+      const container = document.getElementById('ministries-list-container');
+      if (!container) return;
+
+      container.innerHTML = MINISTRIES_DATA.map(min => `
+        <div class="card" style="cursor: pointer;" onclick="filterByCat('${min.name}')">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span style="font-size: 24px;">${min.icon}</span>
+              <div>
+                <div style="font-size: 13px; font-weight: 800; color: var(--gov-navy-primary);">${min.name}</div>
+                <div style="font-size: 10px; color: #64748B; font-weight: 600;">Acronym: ${min.acronym}</div>
+              </div>
+            </div>
+            <span class="badge badge-state">${min.count} Schemes</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // States & UTs
+    function renderStates(query = '') {
+      const container = document.getElementById('state-items-container');
+      if (!container) return;
+
+      const q = query.toLowerCase().trim();
+      const filtered = ALL_36_STATES_UTS.filter(st => !q || st.name.toLowerCase().includes(q) || st.capital.toLowerCase().includes(q));
+
+      container.innerHTML = filtered.map(state => `
+        <div class="state-card-item ${selectedState === state.name ? 'selected' : ''}" onclick="selectState('${state.name}')">
+          <div>
+            <div style="font-size: 13px; font-weight: 700; color: var(--text-primary);">${state.name}</div>
+            <div style="font-size: 10px; color: #64748B;">Capital: ${state.capital} • ${state.type}</div>
+          </div>
+          <div style="text-align: right;">
+            <span class="badge ${state.type === 'State' ? 'badge-state' : 'badge-central'}">${state.schemes} Schemes</span>
+            ${selectedState === state.name ? '<div style="font-size: 10px; color: var(--gov-green); font-weight: bold; margin-top: 2px;">✓ Selected</div>' : ''}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function filterStateList(query) {
+      renderStates(query);
+    }
+
+    function selectState(stateName) {
+      selectedState = stateName;
+      document.getElementById('home-state-name').innerText = stateName;
+      document.getElementById('profile-state-desc').innerText = stateName;
+      renderStates();
+      showToast(`Selected State: ${stateName}`);
+      setTimeout(() => switchScreen('screen-home'), 400);
+    }
+
+    // Find Schemes For Me
+    function setGender(g, btn) {
+      btn.parentElement.querySelectorAll('.tab-pill').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    function setCategory(cat, btn) {
+      btn.parentElement.querySelectorAll('.tab-pill').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    function runEligibilityEvaluation() {
+      const resultBox = document.getElementById('eligibility-results-box');
+      resultBox.style.display = 'block';
+      showToast('Eligibility calculated successfully!');
+    }
+
+    // Auth simulations
+    function setAuthTab(mode) {
+      if (mode === 'OTP') {
+        document.getElementById('tab-otp-btn').classList.add('active');
+        document.getElementById('tab-pass-btn').classList.remove('active');
+        document.getElementById('otp-group-field').style.display = 'block';
+      } else {
+        document.getElementById('tab-pass-btn').classList.add('active');
+        document.getElementById('tab-otp-btn').classList.remove('active');
+        document.getElementById('otp-group-field').style.display = 'none';
+      }
+    }
+
+    function simulateLoginSuccess() {
+      showToast('Authenticated via MeriPehchaan SSO ✓');
+      setTimeout(() => {
+        switchScreen('screen-home');
+      }, 500);
+    }
+
+    function simulateGuestMode() {
+      showToast('Browsing in Guest Mode');
+      switchScreen('screen-home');
+    }
+
+    // Toast helper
+    function showToast(msg) {
+      const toast = document.getElementById('toast-element');
+      document.getElementById('toast-text').innerText = msg;
+      toast.style.display = 'flex';
+      setTimeout(() => {
+        toast.style.display = 'none';
+      }, 2400);
+    }
+  </script>
+</body>
+</html>

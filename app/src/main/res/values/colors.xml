@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Government Brand Palette -->
+    <color name="gov_navy">#0D3B66</color>
+    <color name="gov_navy_dark">#08233D</color>
+    <color name="gov_saffron">#E65100</color>
+    <color name="gov_green">#1B5E20</color>
+    <color name="gov_bg_light">#F8FAFC</color>
+    <color name="gov_surface_white">#FFFFFF</color>
+    <color name="gov_text_primary">#0F172A</color>
+    <color name="gov_text_secondary">#475569</color>
+    <color name="gov_border">#CBD5E1</color>
+</resources>
