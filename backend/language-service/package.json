@@ -1,0 +1,27 @@
+{
+  "name": "language-service",
+  "version": "1.0.0",
+  "description": "Multi-Language Support Service for Government Scheme Guidance Platform (GSGP)",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "test": "node tests/test-endpoints.js"
+  },
+  "keywords": [
+    "multilingual",
+    "translation",
+    "gsgp",
+    "regional-languages",
+    "indic-languages"
+  ],
+  "author": "Person B1",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-rate-limit": "^7.2.0",
+    "node-cache": "^5.1.2"
+  }
+}
