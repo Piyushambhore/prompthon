@@ -1,0 +1,27 @@
+{
+  "name": "eligibility-analyzer",
+  "version": "1.0.0",
+  "description": "Eligibility Analyzer & Rejection Decoder Service for Government Scheme Guidance Platform (GSGP)",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "test": "node tests/test-endpoints.js"
+  },
+  "keywords": [
+    "eligibility",
+    "analyzer",
+    "rejection-decoder",
+    "gsgp",
+    "government-schemes"
+  ],
+  "author": "Person B",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-rate-limit": "^7.2.0",
+    "node-cache": "^5.1.2"
+  }
+}
