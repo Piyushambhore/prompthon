@@ -14,41 +14,54 @@
 
 ## Architecture
 
-```
-┌──────────────────────────────────────────────┐
-│               Ktor Backend                   │
-│                                              │
-│  ┌──────────────┐  ┌───────────────────────┐ │
-│  │ Eligibility  │  │ Document              │ │
-│  │ Service      │  │ Service               │ │
-│  └──────┬───────┘  └──────────┬────────────┘ │
-│         │                     │              │
-│  ┌──────▼─────────────────────▼────────────┐ │
-│  │            Repositories                 │ │
-│  └──────────────────┬──────────────────────┘ │
-│                     │                        │
-│  ┌──────────────────▼──────────────────────┐ │
-│  │         Explanation Service             │ │
-│  │               ↓                         │ │
-│  │         AIProvider (interface)           │ │
-│  │          ┌──────┴──────┐                │ │
-│  │        OpenAI     RuleBased             │ │
-│  └─────────────────────────────────────────┘ │
-└──────────────────────┬───────────────────────┘
-                       ▼
-                 ┌───────────┐
-                 │ PostgreSQL│
-                 └───────────┘
+```mermaid
+graph TB
+    subgraph Client
+        A["📱 Android App<br/>Kotlin + Jetpack Compose"]
+    end
+
+    A -->|"REST / HTTPS"| API
+
+    subgraph Backend["Ktor Backend"]
+        API["Routes / Controllers"]
+
+        API --> ES["Eligibility<br/>Service"]
+        API --> DS["Document<br/>Service"]
+        API --> EXS["Explanation<br/>Service"]
+
+        ES --> SR["Scheme<br/>Repository"]
+        DS --> DR["Document<br/>Repository"]
+
+        EXS --> AIP["AIProvider<br/>«interface»"]
+
+        AIP --> OAI["OpenAI<br/>Provider"]
+        AIP --> RBP["RuleBased<br/>Provider"]
+
+        SR --> DB[(PostgreSQL)]
+        DR --> DB
+    end
+
+    style A fill:#1a73e8,color:#fff,stroke:none
+    style API fill:#34a853,color:#fff,stroke:none
+    style ES fill:#ea4335,color:#fff,stroke:none
+    style DS fill:#fbbc04,color:#000,stroke:none
+    style EXS fill:#ea4335,color:#fff,stroke:none
+    style SR fill:#4285f4,color:#fff,stroke:none
+    style DR fill:#4285f4,color:#fff,stroke:none
+    style AIP fill:#9334e6,color:#fff,stroke:none
+    style OAI fill:#7b1fa2,color:#fff,stroke:none
+    style RBP fill:#7b1fa2,color:#fff,stroke:none
+    style DB fill:#0d652d,color:#fff,stroke:none
 ```
 
 ### 4 Core Responsibilities
 
-| # | Responsibility | Service |
-|---|----------------|---------|
-| 1 | **Eligibility** — "Which schemes may apply to me?" | `EligibilityService` |
-| 2 | **Documents** — "What do I have and what's missing?" | `DocumentService` |
-| 3 | **Explanation** — "What does this government notice mean?" | `ExplanationService` → `AIProvider` |
-| 4 | **Scheme Data** — "What are the official requirements?" | `SchemeRepository` |
+| # | Responsibility | Service | Endpoint |
+|---|----------------|---------|----------|
+| 1 | **Eligibility** — "Which schemes may apply to me?" | `EligibilityService` | `POST /api/schemes/check-eligibility` |
+| 2 | **Documents** — "What do I have and what's missing?" | `DocumentService` | `POST /api/documents/check-readiness` |
+| 3 | **Explanation** — "What does this government notice mean?" | `ExplanationService` → `AIProvider` | `POST /api/explain` |
+| 4 | **Scheme Data** — "What are the official requirements?" | `SchemeRepository` | `GET /api/schemes/{id}` |
 
 ---
 
