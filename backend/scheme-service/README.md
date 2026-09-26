@@ -1,8 +1,8 @@
 # JanSaarthi — Scheme Eligibility & Guidance Service
 
-> **Microservice** that helps citizens discover government schemes they may
-> be eligible for, based on their profile (age, state, income, occupation,
-> category, student status).
+> **Ktor backend** that helps citizens discover government schemes they may
+> be eligible for, check their document readiness, and understand official
+> government notices — all from a single API.
 
 > [!WARNING]
 > **DEMO DATA** — The scheme dataset shipped with this prototype is for
@@ -12,13 +12,53 @@
 
 ---
 
+## Architecture
+
+```
+┌──────────────────────────────────────────────┐
+│               Ktor Backend                   │
+│                                              │
+│  ┌──────────────┐  ┌───────────────────────┐ │
+│  │ Eligibility  │  │ Document              │ │
+│  │ Service      │  │ Service               │ │
+│  └──────┬───────┘  └──────────┬────────────┘ │
+│         │                     │              │
+│  ┌──────▼─────────────────────▼────────────┐ │
+│  │            Repositories                 │ │
+│  └──────────────────┬──────────────────────┘ │
+│                     │                        │
+│  ┌──────────────────▼──────────────────────┐ │
+│  │         Explanation Service             │ │
+│  │               ↓                         │ │
+│  │         AIProvider (interface)           │ │
+│  │          ┌──────┴──────┐                │ │
+│  │        OpenAI     RuleBased             │ │
+│  └─────────────────────────────────────────┘ │
+└──────────────────────┬───────────────────────┘
+                       ▼
+                 ┌───────────┐
+                 │ PostgreSQL│
+                 └───────────┘
+```
+
+### 4 Core Responsibilities
+
+| # | Responsibility | Service |
+|---|----------------|---------|
+| 1 | **Eligibility** — "Which schemes may apply to me?" | `EligibilityService` |
+| 2 | **Documents** — "What do I have and what's missing?" | `DocumentService` |
+| 3 | **Explanation** — "What does this government notice mean?" | `ExplanationService` → `AIProvider` |
+| 4 | **Scheme Data** — "What are the official requirements?" | `SchemeRepository` |
+
+---
+
 ## Requirements
 
-| Requirement   | Version   |
-|---------------|-----------|
-| JDK           | 17+       |
-| Gradle        | 8.x      |
-| PostgreSQL    | 14+       |
+| Requirement   | Version |
+|---------------|---------|
+| JDK           | 17+     |
+| Gradle        | 8.x     |
+| PostgreSQL    | 14+     |
 
 ---
 
@@ -37,21 +77,15 @@ cp .env.example .env
 # Edit .env with your actual database credentials
 ```
 
-| Variable          | Description                        | Default                                        |
-|-------------------|------------------------------------|------------------------------------------------|
-| `PORT`            | Server port                        | `8080`                                         |
-| `DATABASE_URL`    | JDBC connection string             | `jdbc:postgresql://localhost:5432/jansaarthi`   |
-| `DATABASE_USER`   | PostgreSQL username                | `postgres`                                     |
-| `DATABASE_PASSWORD`| PostgreSQL password               | `postgres`                                     |
-| `AI_API_KEY`      | Optional AI API key for `/api/explain` | *(empty — uses rule-based fallback)*       |
+| Variable           | Description                            | Default                                      |
+|--------------------|----------------------------------------|----------------------------------------------|
+| `PORT`             | Server port                            | `8080`                                       |
+| `DATABASE_URL`     | JDBC connection string                 | `jdbc:postgresql://localhost:5432/jansaarthi` |
+| `DATABASE_USER`    | PostgreSQL username                    | `postgres`                                   |
+| `DATABASE_PASSWORD`| PostgreSQL password                    | `postgres`                                   |
+| `AI_API_KEY`       | Optional AI key for `/api/explain`     | *(empty — uses rule-based fallback)*         |
 
-### 3. Generate Gradle wrapper (first time only)
-
-```bash
-gradle wrapper --gradle-version 8.5
-```
-
-### 4. Build & run
+### 3. Build & run
 
 ```bash
 # Windows
@@ -67,13 +101,16 @@ The server starts on **http://localhost:8080**.
 
 ## Available Endpoints
 
-| Method | Path                              | Description                                |
-|--------|-----------------------------------|--------------------------------------------|
-| GET    | `/health`                         | Health check                               |
-| GET    | `/api/schemes`                    | List all schemes (supports `?state=` and `?category=` filters) |
-| GET    | `/api/schemes/{schemeId}`         | Get full details for a single scheme       |
-| POST   | `/api/schemes/check-eligibility`  | Check which schemes match a user profile   |
-| POST   | `/api/explain`                    | Explain an official government notice      |
+| Method | Path                                  | Description                                         |
+|--------|---------------------------------------|-----------------------------------------------------|
+| GET    | `/health`                             | Health check                                        |
+| GET    | `/api/schemes`                        | List schemes (`?state=` and `?category=` filters)   |
+| GET    | `/api/schemes/{schemeId}`             | Full details for a single scheme                    |
+| POST   | `/api/schemes/check-eligibility`      | Check which schemes match a user profile            |
+| POST   | `/api/documents/check-readiness`      | Check document readiness for a scheme               |
+| POST   | `/api/documents/check-readiness/bulk` | Check readiness across multiple schemes             |
+| GET    | `/api/documents/required/{schemeId}`  | List required documents for a scheme                |
+| POST   | `/api/explain`                        | Explain an official government notice               |
 
 ---
 
@@ -125,6 +162,34 @@ curl -X POST http://localhost:8080/api/schemes/check-eligibility \
   }'
 ```
 
+### Check document readiness (single scheme)
+
+```bash
+curl -X POST http://localhost:8080/api/documents/check-readiness \
+  -H "Content-Type: application/json" \
+  -d '{
+    "schemeId": "SCH001",
+    "availableDocuments": ["Aadhaar Card", "Bank Passbook"]
+  }'
+```
+
+### Check document readiness (bulk — multiple schemes)
+
+```bash
+curl -X POST http://localhost:8080/api/documents/check-readiness/bulk \
+  -H "Content-Type: application/json" \
+  -d '{
+    "availableDocuments": ["Aadhaar Card", "Bank Passbook", "PAN Card"],
+    "schemeIds": ["SCH001", "SCH003", "SCH005"]
+  }'
+```
+
+### List required documents
+
+```bash
+curl http://localhost:8080/api/documents/required/SCH001
+```
+
 ### Explain an official notice
 
 ```bash
@@ -168,25 +233,33 @@ backend/scheme-service/
 ├── README.md
 └── src/main/
     ├── kotlin/com/jansaarthi/schemes/
-    │   ├── Application.kt              # Entry point
+    │   ├── Application.kt                 # Entry point + wiring
+    │   ├── ai/
+    │   │   ├── AIProvider.kt              # Provider interface
+    │   │   ├── RuleBasedProvider.kt        # Deterministic fallback
+    │   │   └── OpenAIProvider.kt           # LLM stub (ready for integration)
     │   ├── config/
-    │   │   ├── DatabaseConfig.kt        # HikariCP + Exposed init
-    │   │   ├── DatabaseSeeder.kt        # Demo data (22 schemes)
-    │   │   └── Tables.kt               # Exposed table definitions
+    │   │   ├── DatabaseConfig.kt           # HikariCP + Exposed init
+    │   │   ├── DatabaseSeeder.kt           # Demo data (22 schemes)
+    │   │   └── Tables.kt                  # Exposed table definitions
     │   ├── models/
-    │   │   ├── Scheme.kt                # Scheme response DTOs
-    │   │   ├── UserProfile.kt           # Eligibility request DTO
-    │   │   ├── EligibilityResult.kt     # Eligibility response DTOs
-    │   │   ├── ExplainModels.kt         # Explain request/response
-    │   │   └── ErrorResponse.kt         # Standardised error DTO
+    │   │   ├── Scheme.kt                   # Scheme response DTOs
+    │   │   ├── UserProfile.kt              # Eligibility request DTO
+    │   │   ├── EligibilityResult.kt        # Eligibility response DTOs
+    │   │   ├── Document.kt                 # Document readiness DTOs
+    │   │   ├── ExplainModels.kt            # Explain request/response
+    │   │   └── ErrorResponse.kt            # Standardised error DTO
     │   ├── repositories/
-    │   │   └── SchemeRepository.kt      # Data access layer
+    │   │   ├── SchemeRepository.kt          # Scheme data access
+    │   │   └── DocumentRepository.kt        # Document requirement queries
     │   ├── routes/
-    │   │   ├── HealthRoutes.kt          # GET /health
-    │   │   └── SchemeRoutes.kt          # All /api/* routes
+    │   │   ├── HealthRoutes.kt              # GET /health
+    │   │   ├── SchemeRoutes.kt              # /api/schemes/* + /api/explain
+    │   │   └── DocumentRoutes.kt            # /api/documents/*
     │   └── services/
-    │       ├── EligibilityService.kt    # Rule-based eligibility engine
-    │       └── ExplanationService.kt    # Notice explanation (rule-based + AI stub)
+    │       ├── EligibilityService.kt        # Rule-based eligibility engine
+    │       ├── DocumentService.kt           # Document readiness checker
+    │       └── ExplanationService.kt        # AI provider orchestrator
     └── resources/
         ├── application.conf
         └── logback.xml
@@ -202,6 +275,7 @@ backend/scheme-service/
 - All user input is validated; malformed requests return HTTP 400.
 - Stack traces and internal details are never exposed to clients.
 - No sensitive information (Aadhaar, bank details) is logged.
+- Government documents are not stored permanently.
 
 ---
 

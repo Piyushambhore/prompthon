@@ -1,11 +1,17 @@
 package com.jansaarthi.schemes
 
+import com.jansaarthi.schemes.ai.AIProvider
+import com.jansaarthi.schemes.ai.OpenAIProvider
+import com.jansaarthi.schemes.ai.RuleBasedProvider
 import com.jansaarthi.schemes.config.DatabaseConfig
 import com.jansaarthi.schemes.config.DatabaseSeeder
 import com.jansaarthi.schemes.models.ErrorResponse
+import com.jansaarthi.schemes.repositories.DocumentRepository
 import com.jansaarthi.schemes.repositories.SchemeRepository
+import com.jansaarthi.schemes.routes.documentRoutes
 import com.jansaarthi.schemes.routes.healthRoutes
 import com.jansaarthi.schemes.routes.schemeRoutes
+import com.jansaarthi.schemes.services.DocumentService
 import com.jansaarthi.schemes.services.EligibilityService
 import com.jansaarthi.schemes.services.ExplanationService
 import io.github.cdimascio.dotenv.dotenv
@@ -37,15 +43,25 @@ fun main() {
     DatabaseConfig.init(dbUrl, dbUser, dbPassword)
     DatabaseSeeder.seed()
 
-    // ── Wire up services ───────────────────────────────────────────
-    val repository         = SchemeRepository()
-    val eligibilityService = EligibilityService(repository)
-    val explanationService = ExplanationService(aiApiKey)
+    // ── Repositories ───────────────────────────────────────────────
+    val schemeRepository   = SchemeRepository()
+    val documentRepository = DocumentRepository()
+
+    // ── AI provider chain (order matters — first available wins) ──
+    val providers: List<AIProvider> = listOf(
+        OpenAIProvider(aiApiKey),    // tries AI first (if key is set)
+        RuleBasedProvider()          // guaranteed fallback
+    )
+
+    // ── Services ───────────────────────────────────────────────────
+    val eligibilityService  = EligibilityService(schemeRepository)
+    val documentService     = DocumentService(documentRepository)
+    val explanationService  = ExplanationService(providers)
 
     // ── Start Ktor ─────────────────────────────────────────────────
     embeddedServer(Netty, port = port) {
         configurePlugins()
-        configureRouting(repository, eligibilityService, explanationService)
+        configureRouting(schemeRepository, eligibilityService, documentService, explanationService)
     }.start(wait = true)
 }
 
@@ -92,12 +108,14 @@ fun Application.configurePlugins() {
 // ── Routing ────────────────────────────────────────────────────────
 
 fun Application.configureRouting(
-    repository: SchemeRepository,
+    schemeRepository: SchemeRepository,
     eligibilityService: EligibilityService,
+    documentService: DocumentService,
     explanationService: ExplanationService
 ) {
     routing {
         healthRoutes()
-        schemeRoutes(repository, eligibilityService, explanationService)
+        schemeRoutes(schemeRepository, eligibilityService, explanationService)
+        documentRoutes(documentService)
     }
 }

@@ -5,6 +5,7 @@ import com.jansaarthi.schemes.repositories.SchemeRepository
 import com.jansaarthi.schemes.services.EligibilityService
 import com.jansaarthi.schemes.services.ExplanationService
 import io.ktor.http.*
+import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
