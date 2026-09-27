@@ -30,6 +30,7 @@ import androidx.compose.ui.window.Dialog
 import org.jansaarthi.app.data.model.AppLanguage
 import org.jansaarthi.app.ui.components.AccessibilityBar
 import org.jansaarthi.app.ui.components.GovernmentBanner
+import org.jansaarthi.app.ui.components.JanSaarthiBottomNav
 import org.jansaarthi.app.ui.localization.getJanSaarthiStrings
 import org.jansaarthi.app.ui.theme.*
 
@@ -307,6 +308,12 @@ fun CategoriesScreen(
     onFontScaleToggle: () -> Unit = {},
     onNavigateBack: () -> Unit = {},
     onSelectCategory: (GovernmentSchemeCategory) -> Unit = {},
+    onNavigateHome: () -> Unit = {},
+    onNavigateSchemes: () -> Unit = {},
+    onNavigateApplications: () -> Unit = {},
+    onNavigateDocuments: () -> Unit = {},
+    onNavigateProfile: () -> Unit = {},
+    onNavigateAllSchemesList: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val strings = getJanSaarthiStrings(currentLanguage)
@@ -387,24 +394,58 @@ fun CategoriesScreen(
                             }
                         }
 
-                        // Category count badge
-                        Surface(
-                            color = Color(0xFFEFF6FF),
-                            shape = RoundedCornerShape(12.dp),
-                            border = BorderStroke(1.dp, Color(0xFFBFDBFE))
+                        // Category count badge & Full List trigger
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(6.dp)
                         ) {
-                            Text(
-                                text = "15 / 15",
-                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                                style = MaterialTheme.typography.labelSmall.copy(
-                                    color = GovNavyPrimary,
-                                    fontWeight = FontWeight.Bold
+                            Surface(
+                                color = GovNavyContainer,
+                                shape = RoundedCornerShape(12.dp),
+                                border = BorderStroke(1.dp, Color(0xFFBFDBFE)),
+                                modifier = Modifier.clickable { onNavigateAllSchemesList() }
+                            ) {
+                                Text(
+                                    text = if (currentLanguage == AppLanguage.HINDI) "समस्त सूची ↗" else "All List ↗",
+                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                                    style = MaterialTheme.typography.labelSmall.copy(
+                                        color = GovNavyPrimary,
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 11.sp
+                                    )
                                 )
-                            )
+                            }
+
+                            Surface(
+                                color = Color(0xFFEFF6FF),
+                                shape = RoundedCornerShape(12.dp),
+                                border = BorderStroke(1.dp, Color(0xFFBFDBFE))
+                            ) {
+                                Text(
+                                    text = "15 / 15",
+                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                                    style = MaterialTheme.typography.labelSmall.copy(
+                                        color = GovNavyPrimary,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                )
+                            }
                         }
                     }
                 }
             }
+        },
+        bottomBar = {
+            JanSaarthiBottomNav(
+                selectedTab = 1,
+                currentLanguage = currentLanguage,
+                pendingApplications = 2,
+                onNavigateHome = onNavigateHome,
+                onNavigateSchemes = onNavigateSchemes,
+                onNavigateApplications = onNavigateApplications,
+                onNavigateDocuments = onNavigateDocuments,
+                onNavigateProfile = onNavigateProfile
+            )
         },
         modifier = modifier
             .fillMaxSize()
@@ -606,7 +647,6 @@ fun CategoriesScreen(
                         currentLanguage = currentLanguage,
                         fontSizeMultiplier = fontSizeMultiplier,
                         onClick = {
-                            selectedCategoryForModal = category
                             onSelectCategory(category)
                         }
                     )

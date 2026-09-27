@@ -232,7 +232,13 @@ class MainActivity : ComponentActivity() {
                                                 categoryName = category.getName(currentLanguage)
                                             )
                                         )
-                                    }
+                                    },
+                                    onNavigateHome = { navigateToRoot(JanSaarthiDestination.Home) },
+                                    onNavigateSchemes = { /* already on Categories */ },
+                                    onNavigateApplications = { navigateToRoot(JanSaarthiDestination.MyApplications) },
+                                    onNavigateDocuments = { navigateToRoot(JanSaarthiDestination.Documents) },
+                                    onNavigateProfile = { navigateToRoot(JanSaarthiDestination.ProfileSettings) },
+                                    onNavigateAllSchemesList = { navigateTo(JanSaarthiDestination.AllSchemes) }
                                 )
                             }
 
@@ -279,6 +285,7 @@ class MainActivity : ComponentActivity() {
                                     onFontScaleToggle = { isLargeFont = !isLargeFont },
                                     onNavigateBack = { popBackStack() },
                                     onNavigateHome = { navigateToRoot(JanSaarthiDestination.Home) },
+                                    onNavigateSchemes = { navigateToRoot(JanSaarthiDestination.Categories) },
                                     onNavigateApplications = { navigateToRoot(JanSaarthiDestination.MyApplications) },
                                     onNavigateDocuments = { navigateToRoot(JanSaarthiDestination.Documents) },
                                     onNavigateProfile = { navigateToRoot(JanSaarthiDestination.ProfileSettings) }
@@ -296,7 +303,7 @@ class MainActivity : ComponentActivity() {
                                         navigateTo(JanSaarthiDestination.EligibilityProfile)
                                     },
                                     onViewAllSchemes = {
-                                        navigateTo(JanSaarthiDestination.AllSchemes)
+                                        navigateTo(JanSaarthiDestination.Categories)
                                     }
                                 )
                             }
@@ -322,7 +329,7 @@ class MainActivity : ComponentActivity() {
                                     onFontScaleToggle = { isLargeFont = !isLargeFont },
                                     onNavigateBack = { popBackStack() },
                                     onNavigateHome = { navigateToRoot(JanSaarthiDestination.Home) },
-                                    onNavigateSchemes = { navigateToRoot(JanSaarthiDestination.AllSchemes) },
+                                    onNavigateSchemes = { navigateToRoot(JanSaarthiDestination.Categories) },
                                     onNavigateApplications = { navigateToRoot(JanSaarthiDestination.MyApplications) },
                                     onNavigateProfile = { navigateToRoot(JanSaarthiDestination.ProfileSettings) }
                                 )
@@ -336,7 +343,7 @@ class MainActivity : ComponentActivity() {
                                     onFontScaleToggle = { isLargeFont = !isLargeFont },
                                     onNavigateBack = { popBackStack() },
                                     onNavigateHome = { navigateToRoot(JanSaarthiDestination.Home) },
-                                    onNavigateSchemes = { navigateToRoot(JanSaarthiDestination.AllSchemes) },
+                                    onNavigateSchemes = { navigateToRoot(JanSaarthiDestination.Categories) },
                                     onNavigateDocuments = { navigateToRoot(JanSaarthiDestination.Documents) },
                                     onNavigateProfile = { navigateToRoot(JanSaarthiDestination.ProfileSettings) }
                                 )
@@ -364,7 +371,7 @@ class MainActivity : ComponentActivity() {
                                     isLargeFont = isLargeFont,
                                     onFontScaleToggle = { isLargeFont = !isLargeFont },
                                     onNavigateBack = { popBackStack() },
-                                    onExploreSchemes = { navigateTo(JanSaarthiDestination.AllSchemes) },
+                                    onExploreSchemes = { navigateTo(JanSaarthiDestination.Categories) },
                                     onOpenSchemeDetails = { schemeId ->
                                         navigateTo(JanSaarthiDestination.SchemeDetails(schemeId))
                                     }
@@ -404,7 +411,7 @@ class MainActivity : ComponentActivity() {
                                     },
                                     onOpenHelpSupport = { },
                                     onNavigateHome = { navigateToRoot(JanSaarthiDestination.Home) },
-                                    onNavigateSchemes = { navigateToRoot(JanSaarthiDestination.AllSchemes) },
+                                    onNavigateSchemes = { navigateToRoot(JanSaarthiDestination.Categories) },
                                     onNavigateApplications = { navigateToRoot(JanSaarthiDestination.MyApplications) },
                                     onNavigateDocuments = { navigateToRoot(JanSaarthiDestination.Documents) },
                                     onLogout = { authViewModel.logout() }
@@ -430,7 +437,7 @@ class MainActivity : ComponentActivity() {
                                         navigateTo(JanSaarthiDestination.Ministries)
                                     },
                                     onOpenAllSchemes = {
-                                        navigateTo(JanSaarthiDestination.AllSchemes)
+                                        navigateTo(JanSaarthiDestination.Categories)
                                     },
                                     onOpenDocuments = {
                                         navigateTo(JanSaarthiDestination.Documents)

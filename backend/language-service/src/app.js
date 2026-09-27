@@ -6,10 +6,10 @@ const translationRoutes = require('./routes/translation');
 
 const app = express();
 
-// Configure CORS restricted to http://localhost:3000 only
+// Configure CORS allowed origins (frontend dev ports)
 const allowedOrigins = process.env.CORS_ORIGIN 
   ? process.env.CORS_ORIGIN.split(',').map(s => s.trim()) 
-  : ['http://localhost:3000'];
+  : ['http://localhost:3000', 'http://localhost:5173', 'http://127.0.0.1:3000', 'http://127.0.0.1:5173'];
 
 app.use(cors({
   origin: function (origin, callback) {

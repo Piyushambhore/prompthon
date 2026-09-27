@@ -40,6 +40,7 @@ import org.jansaarthi.app.data.model.WelfareScheme
 import org.jansaarthi.app.data.model.getApplicableSchemesForState
 import org.jansaarthi.app.ui.components.AccessibilityBar
 import org.jansaarthi.app.ui.components.GovernmentBanner
+import org.jansaarthi.app.ui.components.JanSaarthiBottomNav
 import org.jansaarthi.app.ui.components.LanguageSelectorDialog
 import org.jansaarthi.app.ui.localization.getJanSaarthiStrings
 import org.jansaarthi.app.ui.theme.*
@@ -159,7 +160,6 @@ fun JanSaarthiHomeScreen(
     var searchQuery by remember { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf<String?>(null) }
     var selectedSchemeScope by remember { mutableStateOf("ALL") } // ALL, CENTRAL, STATE
-    var activeBottomNavTab by remember { mutableIntStateOf(0) } // 0: Home, 1: Find For Me, 2: Categories, 3: Applications, 4: Documents
 
     // Saved/Bookmarked schemes set
     var savedSchemeIds by remember {
@@ -476,11 +476,29 @@ fun JanSaarthiHomeScreen(
                             }
                         }
 
-                        // Right Actions: Language Quick Pill + Notification Bell + Profile
+                        // Right Actions: Font Toggle + Language Pill + Notification Bell + Profile
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                            horizontalArrangement = Arrangement.spacedBy(6.dp)
                         ) {
+                            // Font Size Toggle Pill (A / A+)
+                            Surface(
+                                shape = RoundedCornerShape(16.dp),
+                                color = if (isLargeFont) GovNavyPrimary else Color(0xFFF1F5F9),
+                                border = BorderStroke(1.dp, if (isLargeFont) GovNavyPrimary else Color(0xFFCBD5E1)),
+                                modifier = Modifier.clickable { onFontScaleToggle() }
+                            ) {
+                                Text(
+                                    text = if (isLargeFont) "A+" else "A",
+                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                                    style = MaterialTheme.typography.labelSmall.copy(
+                                        fontWeight = FontWeight.Bold,
+                                        color = if (isLargeFont) Color.White else GovNavyPrimary,
+                                        fontSize = 11.sp
+                                    )
+                                )
+                            }
+
                             // Quick Language Indicator Pill
                             Surface(
                                 shape = RoundedCornerShape(16.dp),
@@ -544,190 +562,16 @@ fun JanSaarthiHomeScreen(
             }
         },
         bottomBar = {
-            // ---------------------------------------------------------------
-            // GLOBAL BOTTOM NAVIGATION BAR
-            // Home · Schemes · Applications · Documents · Profile
-            // Material 3 NavigationBar — proper selected/unselected states
-            // ---------------------------------------------------------------
-            NavigationBar(
-                containerColor = Color.White,
-                tonalElevation = 8.dp,
-                modifier = Modifier
-                    .height(72.dp)
-                    .then(
-                        Modifier // subtle top border for visual separation
-                    )
-            ) {
-                // Tab 0 — Home
-                NavigationBarItem(
-                    selected = activeBottomNavTab == 0,
-                    onClick = { activeBottomNavTab = 0 },
-                    icon = {
-                        Icon(
-                            imageVector = if (activeBottomNavTab == 0) Icons.Filled.Home else Icons.Filled.Home,
-                            contentDescription = if (currentLanguage == AppLanguage.HINDI) "होम" else "Home",
-                            modifier = Modifier.size(24.dp)
-                        )
-                    },
-                    label = {
-                        Text(
-                            text = if (currentLanguage == AppLanguage.HINDI) "होम" else "Home",
-                            style = MaterialTheme.typography.labelSmall.copy(
-                                fontWeight = if (activeBottomNavTab == 0) FontWeight.Bold else FontWeight.Normal,
-                                fontSize = 10.sp
-                            )
-                        )
-                    },
-                    colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = GovNavyPrimary,
-                        selectedTextColor = GovNavyPrimary,
-                        indicatorColor = GovNavyContainer,
-                        unselectedIconColor = Color(0xFF94A3B8),
-                        unselectedTextColor = Color(0xFF94A3B8)
-                    )
-                )
-
-                // Tab 1 — Schemes
-                NavigationBarItem(
-                    selected = activeBottomNavTab == 1,
-                    onClick = {
-                        activeBottomNavTab = 1
-                        onOpenAllSchemes()
-                    },
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Filled.GridView,
-                            contentDescription = if (currentLanguage == AppLanguage.HINDI) "योजनाएं" else "Schemes",
-                            modifier = Modifier.size(24.dp)
-                        )
-                    },
-                    label = {
-                        Text(
-                            text = if (currentLanguage == AppLanguage.HINDI) "योजनाएं" else "Schemes",
-                            style = MaterialTheme.typography.labelSmall.copy(
-                                fontWeight = if (activeBottomNavTab == 1) FontWeight.Bold else FontWeight.Normal,
-                                fontSize = 10.sp
-                            )
-                        )
-                    },
-                    colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = GovNavyPrimary,
-                        selectedTextColor = GovNavyPrimary,
-                        indicatorColor = GovNavyContainer,
-                        unselectedIconColor = Color(0xFF94A3B8),
-                        unselectedTextColor = Color(0xFF94A3B8)
-                    )
-                )
-
-                // Tab 2 — Applications
-                NavigationBarItem(
-                    selected = activeBottomNavTab == 2,
-                    onClick = {
-                        activeBottomNavTab = 2
-                        onOpenApplications()
-                    },
-                    icon = {
-                        BadgedBox(
-                            badge = {
-                                if (activeBottomNavTab != 2) {
-                                    Badge(
-                                        containerColor = GovSaffron,
-                                        contentColor = Color.White
-                                    ) {
-                                        Text("2", fontSize = 9.sp, fontWeight = FontWeight.Bold)
-                                    }
-                                }
-                            }
-                        ) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.Assignment,
-                                contentDescription = if (currentLanguage == AppLanguage.HINDI) "आवेदन" else "Applications",
-                                modifier = Modifier.size(24.dp)
-                            )
-                        }
-                    },
-                    label = {
-                        Text(
-                            text = if (currentLanguage == AppLanguage.HINDI) "आवेदन" else "Applications",
-                            style = MaterialTheme.typography.labelSmall.copy(
-                                fontWeight = if (activeBottomNavTab == 2) FontWeight.Bold else FontWeight.Normal,
-                                fontSize = 10.sp
-                            )
-                        )
-                    },
-                    colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = GovNavyPrimary,
-                        selectedTextColor = GovNavyPrimary,
-                        indicatorColor = GovNavyContainer,
-                        unselectedIconColor = Color(0xFF94A3B8),
-                        unselectedTextColor = Color(0xFF94A3B8)
-                    )
-                )
-
-                // Tab 3 — Documents
-                NavigationBarItem(
-                    selected = activeBottomNavTab == 3,
-                    onClick = {
-                        activeBottomNavTab = 3
-                        onOpenDocuments()
-                    },
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Filled.FolderOpen,
-                            contentDescription = if (currentLanguage == AppLanguage.HINDI) "दस्तावेज़" else "Documents",
-                            modifier = Modifier.size(24.dp)
-                        )
-                    },
-                    label = {
-                        Text(
-                            text = if (currentLanguage == AppLanguage.HINDI) "दस्तावेज़" else "Docs",
-                            style = MaterialTheme.typography.labelSmall.copy(
-                                fontWeight = if (activeBottomNavTab == 3) FontWeight.Bold else FontWeight.Normal,
-                                fontSize = 10.sp
-                            )
-                        )
-                    },
-                    colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = GovNavyPrimary,
-                        selectedTextColor = GovNavyPrimary,
-                        indicatorColor = GovNavyContainer,
-                        unselectedIconColor = Color(0xFF94A3B8),
-                        unselectedTextColor = Color(0xFF94A3B8)
-                    )
-                )
-
-                // Tab 4 — Profile
-                NavigationBarItem(
-                    selected = activeBottomNavTab == 4,
-                    onClick = {
-                        activeBottomNavTab = 4
-                        onOpenProfileSettings()
-                    },
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Filled.AccountCircle,
-                            contentDescription = if (currentLanguage == AppLanguage.HINDI) "प्रोफाइल" else "Profile",
-                            modifier = Modifier.size(24.dp)
-                        )
-                    },
-                    label = {
-                        Text(
-                            text = if (currentLanguage == AppLanguage.HINDI) "प्रोफाइल" else "Profile",
-                            style = MaterialTheme.typography.labelSmall.copy(
-                                fontWeight = if (activeBottomNavTab == 4) FontWeight.Bold else FontWeight.Normal,
-                                fontSize = 10.sp
-                            )
-                        )
-                    },
-                    colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = GovNavyPrimary,
-                        selectedTextColor = GovNavyPrimary,
-                        indicatorColor = GovNavyContainer,
-                        unselectedIconColor = Color(0xFF94A3B8),
-                        unselectedTextColor = Color(0xFF94A3B8)
-                    )
-                )
-            }
+            JanSaarthiBottomNav(
+                selectedTab = 0,
+                currentLanguage = currentLanguage,
+                pendingApplications = 2,
+                onNavigateHome = { /* Already on Home */ },
+                onNavigateSchemes = onOpenCategories, // "in schmes it should be categaires"
+                onNavigateApplications = onOpenApplications,
+                onNavigateDocuments = onOpenDocuments,
+                onNavigateProfile = onOpenProfileSettings
+            )
         },
         modifier = modifier
             .fillMaxSize()
@@ -740,17 +584,6 @@ fun JanSaarthiHomeScreen(
                 .padding(horizontal = 16.dp, vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // -------------------------------------------------------------
-            // ACCESSIBILITY CONTROL BAR (Language & Font Sizing)
-            // -------------------------------------------------------------
-            item {
-                AccessibilityBar(
-                    currentLanguage = currentLanguage,
-                    onSelectLanguage = onSelectLanguage,
-                    isLargeFont = isLargeFont,
-                    onFontScaleToggle = onFontScaleToggle
-                )
-            }
 
             // Guest Notice (if in guest mode)
             if (isGuest) {
@@ -1408,13 +1241,13 @@ fun JanSaarthiHomeScreen(
                         }
 
                         OutlinedButton(
-                            onClick = onOpenAllSchemes,
+                            onClick = onOpenCategories,
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(10.dp),
                             border = BorderStroke(1.dp, GovNavyPrimary)
                         ) {
                             Text(
-                                text = if (currentLanguage == AppLanguage.HINDI) "समस्त सरकारी योजनाएं देखें (केंद्र, राज्य, यूटी) →" else "Explore All Government Schemes (Central, State, UT) →",
+                                text = if (currentLanguage == AppLanguage.HINDI) "📁 सभी योजना श्रेणियां देखें (15 श्रेणियां) →" else "📁 Browse All Scheme Categories (15 Domains) →",
                                 style = MaterialTheme.typography.labelMedium.copy(
                                     fontWeight = FontWeight.Bold,
                                     color = GovNavyPrimary
@@ -1435,6 +1268,213 @@ fun JanSaarthiHomeScreen(
                                     color = Color(0xFFC2410C)
                                 )
                             )
+                        }
+                    }
+                }
+            }
+
+            // -------------------------------------------------------------
+            // QUICK CITIZEN ACCESS HUB (4 Clean Cards)
+            // -------------------------------------------------------------
+            item {
+                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Text(
+                        text = if (currentLanguage == AppLanguage.HINDI) "⚡ त्वरित नागरिक सेवाएं" else "⚡ Quick Citizen Services",
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontWeight = FontWeight.Bold,
+                            color = GovNavyPrimary,
+                            fontSize = (15 * fontSizeMultiplier).sp
+                        )
+                    )
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        // 1. Categories
+                        Card(
+                            shape = RoundedCornerShape(12.dp),
+                            colors = CardDefaults.cardColors(containerColor = Color.White),
+                            border = BorderStroke(1.dp, Color(0xFFE2E8F0)),
+                            modifier = Modifier
+                                .weight(1f)
+                                .clickable { onOpenCategories() }
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(12.dp),
+                                verticalArrangement = Arrangement.spacedBy(6.dp)
+                            ) {
+                                Surface(
+                                    color = GovNavyContainer,
+                                    shape = RoundedCornerShape(8.dp),
+                                    modifier = Modifier.size(36.dp)
+                                ) {
+                                    Box(contentAlignment = Alignment.Center) {
+                                        Icon(
+                                            imageVector = Icons.Default.GridView,
+                                            contentDescription = null,
+                                            tint = GovNavyPrimary,
+                                            modifier = Modifier.size(20.dp)
+                                        )
+                                    }
+                                }
+                                Text(
+                                    text = if (currentLanguage == AppLanguage.HINDI) "योजना श्रेणियां" else "Categories",
+                                    style = MaterialTheme.typography.titleSmall.copy(
+                                        fontWeight = FontWeight.Bold,
+                                        color = GovTextPrimary,
+                                        fontSize = (12 * fontSizeMultiplier).sp
+                                    )
+                                )
+                                Text(
+                                    text = if (currentLanguage == AppLanguage.HINDI) "15 राष्ट्रीय श्रेणियां" else "15 Domains",
+                                    style = MaterialTheme.typography.bodySmall.copy(
+                                        color = Color(0xFF64748B),
+                                        fontSize = 10.sp
+                                    )
+                                )
+                            }
+                        }
+
+                        // 2. Applications
+                        Card(
+                            shape = RoundedCornerShape(12.dp),
+                            colors = CardDefaults.cardColors(containerColor = Color.White),
+                            border = BorderStroke(1.dp, Color(0xFFE2E8F0)),
+                            modifier = Modifier
+                                .weight(1f)
+                                .clickable { onOpenApplications() }
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(12.dp),
+                                verticalArrangement = Arrangement.spacedBy(6.dp)
+                            ) {
+                                Surface(
+                                    color = GovSaffronLight,
+                                    shape = RoundedCornerShape(8.dp),
+                                    modifier = Modifier.size(36.dp)
+                                ) {
+                                    Box(contentAlignment = Alignment.Center) {
+                                        Icon(
+                                            imageVector = Icons.AutoMirrored.Filled.Assignment,
+                                            contentDescription = null,
+                                            tint = GovSaffron,
+                                            modifier = Modifier.size(20.dp)
+                                        )
+                                    }
+                                }
+                                Text(
+                                    text = if (currentLanguage == AppLanguage.HINDI) "आवेदन ट्रैकर" else "Applications",
+                                    style = MaterialTheme.typography.titleSmall.copy(
+                                        fontWeight = FontWeight.Bold,
+                                        color = GovTextPrimary,
+                                        fontSize = (12 * fontSizeMultiplier).sp
+                                    )
+                                )
+                                Text(
+                                    text = if (currentLanguage == AppLanguage.HINDI) "2 सक्रिय डीबीटी" else "2 Active DBT",
+                                    style = MaterialTheme.typography.bodySmall.copy(
+                                        color = GovGreen,
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 10.sp
+                                    )
+                                )
+                            }
+                        }
+                    }
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        // 3. Vault Documents
+                        Card(
+                            shape = RoundedCornerShape(12.dp),
+                            colors = CardDefaults.cardColors(containerColor = Color.White),
+                            border = BorderStroke(1.dp, Color(0xFFE2E8F0)),
+                            modifier = Modifier
+                                .weight(1f)
+                                .clickable { onOpenDocuments() }
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(12.dp),
+                                verticalArrangement = Arrangement.spacedBy(6.dp)
+                            ) {
+                                Surface(
+                                    color = GovGreenLight,
+                                    shape = RoundedCornerShape(8.dp),
+                                    modifier = Modifier.size(36.dp)
+                                ) {
+                                    Box(contentAlignment = Alignment.Center) {
+                                        Icon(
+                                            imageVector = Icons.Default.FolderOpen,
+                                            contentDescription = null,
+                                            tint = GovGreen,
+                                            modifier = Modifier.size(20.dp)
+                                        )
+                                    }
+                                }
+                                Text(
+                                    text = if (currentLanguage == AppLanguage.HINDI) "दस्तावेज़ वॉल्ट" else "Doc Vault",
+                                    style = MaterialTheme.typography.titleSmall.copy(
+                                        fontWeight = FontWeight.Bold,
+                                        color = GovTextPrimary,
+                                        fontSize = (12 * fontSizeMultiplier).sp
+                                    )
+                                )
+                                Text(
+                                    text = if (currentLanguage == AppLanguage.HINDI) "डिजीलॉकर सत्यापित" else "DigiLocker Synced",
+                                    style = MaterialTheme.typography.bodySmall.copy(
+                                        color = Color(0xFF64748B),
+                                        fontSize = 10.sp
+                                    )
+                                )
+                            }
+                        }
+
+                        // 4. Saved Schemes
+                        Card(
+                            shape = RoundedCornerShape(12.dp),
+                            colors = CardDefaults.cardColors(containerColor = Color.White),
+                            border = BorderStroke(1.dp, Color(0xFFE2E8F0)),
+                            modifier = Modifier
+                                .weight(1f)
+                                .clickable { onOpenSavedSchemes() }
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(12.dp),
+                                verticalArrangement = Arrangement.spacedBy(6.dp)
+                            ) {
+                                Surface(
+                                    color = Color(0xFFFFF7ED),
+                                    shape = RoundedCornerShape(8.dp),
+                                    modifier = Modifier.size(36.dp)
+                                ) {
+                                    Box(contentAlignment = Alignment.Center) {
+                                        Icon(
+                                            imageVector = Icons.Default.Bookmark,
+                                            contentDescription = null,
+                                            tint = GovSaffron,
+                                            modifier = Modifier.size(20.dp)
+                                        )
+                                    }
+                                }
+                                Text(
+                                    text = if (currentLanguage == AppLanguage.HINDI) "सहेजी गई योजनाएं" else "Saved Schemes",
+                                    style = MaterialTheme.typography.titleSmall.copy(
+                                        fontWeight = FontWeight.Bold,
+                                        color = GovTextPrimary,
+                                        fontSize = (12 * fontSizeMultiplier).sp
+                                    )
+                                )
+                                Text(
+                                    text = "${savedSchemeIds.size} " + (if (currentLanguage == AppLanguage.HINDI) "योजनाएं" else "Bookmarked"),
+                                    style = MaterialTheme.typography.bodySmall.copy(
+                                        color = Color(0xFF64748B),
+                                        fontSize = 10.sp
+                                    )
+                                )
+                            }
                         }
                     }
                 }

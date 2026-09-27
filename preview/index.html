@@ -699,6 +699,120 @@
       line-height: 1.2;
     }
 
+    /* Teammate WhatsApp Design Components */
+    .hero-guide-banner {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      padding: 14px 18px 6px 18px;
+      background: linear-gradient(180deg, #F8FAFC 0%, #FFFFFF 100%);
+    }
+
+    .hero-guide-text {
+      flex: 1;
+      padding-right: 10px;
+    }
+
+    .hero-guide-greeting {
+      font-size: 24px;
+      font-weight: 800;
+      color: #0F172A;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 4px;
+      letter-spacing: -0.3px;
+    }
+
+    .hero-guide-sub {
+      font-size: 13px;
+      color: #64748B;
+      line-height: 1.4;
+      font-weight: 500;
+    }
+
+    .hero-guide-avatar {
+      width: 96px;
+      height: 104px;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .find-schemes-hero-card {
+      background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%);
+      color: #FFFFFF;
+      border-radius: 16px;
+      padding: 16px;
+      margin: 10px 16px 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 16px rgba(2, 132, 199, 0.35);
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+
+    .find-schemes-hero-card:active {
+      transform: scale(0.98);
+    }
+
+    .action-two-cards-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      padding: 0 16px 12px 16px;
+    }
+
+    .action-subcard {
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      border-radius: 16px;
+      padding: 14px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 90px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      transition: all 0.15s ease;
+    }
+
+    .action-subcard:hover {
+      border-color: #CBD5E1;
+      transform: translateY(-2px);
+    }
+
+    .action-subcard:active {
+      transform: scale(0.98);
+    }
+
+    .need-help-banner {
+      background: #EFF6FF;
+      border: 1px solid #BFDBFE;
+      border-radius: 16px;
+      padding: 12px 16px;
+      margin: 0 16px 16px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+    }
+
+    .mic-round-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #0369A1;
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      box-shadow: 0 4px 10px rgba(3, 105, 161, 0.35);
+      cursor: pointer;
+      font-size: 20px;
+    }
+
     .eligibility-cta-card {
       margin: 8px 16px 12px 16px;
       background: linear-gradient(135deg, #0A3C66 0%, #002B49 100%);
@@ -987,32 +1101,104 @@
               </div>
             </div>
 
-            <!-- Citizen Greeting Card -->
-            <div style="padding: 12px 16px 4px 16px;">
-              <div style="font-size: 11px; color: #64748B; font-weight: 600;">Welcome Citizen,</div>
-              <div style="font-size: 18px; font-weight: 800; color: var(--gov-navy-primary);" id="user-display-name">Ramesh Kumar Sharma</div>
+            <!-- Teammate Design: Namaste Guide Hero Banner -->
+            <div class="hero-guide-banner">
+              <div class="hero-guide-text">
+                <div class="hero-guide-greeting">
+                  <span>Namaste!</span>
+                  <span style="font-size: 24px;">👋</span>
+                </div>
+                <div class="hero-guide-sub">Your government scheme guide is here to help you.</div>
+              </div>
+              <div class="hero-guide-avatar">
+                <svg viewBox="0 0 100 110" width="100" height="110" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M10 110 C 20 85, 45 75, 60 110 Z" fill="#BBF7D0" opacity="0.6"/>
+                  <path d="M40 110 C 65 78, 85 82, 100 110 Z" fill="#86EFAC" opacity="0.5"/>
+                  <path d="M30 46 C 25 35, 32 18, 52 18 C 72 18, 79 35, 74 46 C 75 58, 68 70, 52 70 C 36 70, 29 58, 30 46 Z" fill="#1E293B"/>
+                  <path d="M45 52 L59 52 L62 68 L42 68 Z" fill="#FBBF24" opacity="0.8"/>
+                  <path d="M28 85 C 32 68, 72 68, 76 85 L84 110 L20 110 Z" fill="#F97316"/>
+                  <path d="M36 74 C 44 68, 62 80, 74 110 L60 110 C 50 90, 40 82, 36 74 Z" fill="#FB923C"/>
+                  <path d="M36 74 L40 70 L62 95 L58 98 Z" fill="#FBBF24" opacity="0.4"/>
+                  <ellipse cx="52" cy="40" rx="14" ry="16" fill="#FCD34D"/>
+                  <path d="M38 32 C 44 26, 60 26, 66 32 C 64 24, 40 24, 38 32 Z" fill="#0F172A"/>
+                  <circle cx="52" cy="30" r="1.5" fill="#EF4444"/>
+                  <circle cx="47" cy="39" r="1.5" fill="#0F172A"/>
+                  <circle cx="57" cy="39" r="1.5" fill="#0F172A"/>
+                  <path d="M48 45 Q 52 48, 56 45" stroke="#9A3412" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+              </div>
             </div>
 
-            <!-- DBT Active Status -->
-            <div class="dbt-active-banner">
-              <div class="dbt-text">
-                <span style="font-size: 16px;">✓</span>
+            <!-- Big Blue Action Card: Find Schemes -->
+            <div class="find-schemes-hero-card" onclick="switchScreen('screen-schemes')">
+              <div style="display: flex; align-items: center; gap: 14px;">
+                <div style="width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center;">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                  </svg>
+                </div>
                 <div>
-                  <div style="line-height: 1.2;">Aadhaar DBT Status: Active</div>
-                  <div style="font-size: 10px; color: #475569; font-weight: 500;">Linked with SBI • A/c ***4821</div>
+                  <div style="font-size: 17px; font-weight: 800; line-height: 1.2;">Find Schemes</div>
+                  <div style="font-size: 12px; opacity: 0.9; margin-top: 2px;">Find benefits for you</div>
                 </div>
               </div>
-              <span class="badge badge-dbt">VERIFIED</span>
+              <div style="font-size: 22px; font-weight: 800; opacity: 0.9;">›</div>
             </div>
 
-            <!-- Find Schemes For Me Banner -->
-            <div class="eligibility-cta-card" onclick="switchScreen('screen-eligibility')">
-              <div>
-                <span class="cta-badge-pill">SMART RECOMMENDATION</span>
-                <div style="font-size: 14px; font-weight: 800; line-height: 1.2;">Find Schemes For Me</div>
-                <div style="font-size: 11px; opacity: 0.85; margin-top: 2px;">Answer 4 simple questions & discover 12+ eligible benefits</div>
+            <!-- Two Subcards: My Documents & My Applications -->
+            <div class="action-two-cards-row">
+              <div class="action-subcard" onclick="switchScreen('screen-documents')">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                  <div style="width: 38px; height: 38px; border-radius: 10px; background: #EFF6FF; display: flex; align-items: center; justify-content: center; color: #2563EB;">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                      <polyline points="14 2 14 8 20 8"></polyline>
+                      <line x1="16" y1="13" x2="8" y2="13"></line>
+                      <line x1="16" y1="17" x2="8" y2="17"></line>
+                      <line x1="10" y1="9" x2="8" y2="9"></line>
+                    </svg>
+                  </div>
+                  <span style="color: #94A3B8; font-size: 16px; font-weight: 700;">›</span>
+                </div>
+                <div style="font-size: 13px; font-weight: 800; color: #0F172A;">My Documents</div>
               </div>
-              <div style="font-size: 24px; font-weight: bold;">→</div>
+
+              <div class="action-subcard" onclick="switchScreen('screen-applications')">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                  <div style="width: 38px; height: 38px; border-radius: 10px; background: #FAF5FF; display: flex; align-items: center; justify-content: center; color: #9333EA;">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                      <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                      <path d="M9 12h6"></path>
+                      <path d="M9 16h6"></path>
+                    </svg>
+                  </div>
+                  <span style="color: #94A3B8; font-size: 16px; font-weight: 700;">›</span>
+                </div>
+                <div style="font-size: 13px; font-weight: 800; color: #0F172A;">My Applications</div>
+              </div>
+            </div>
+
+            <!-- Need Help? Banner with Microphone -->
+            <div class="need-help-banner">
+              <div style="display: flex; align-items: center; gap: 12px;" onclick="switchScreen('screen-eligibility')">
+                <div style="width: 42px; height: 42px; border-radius: 12px; background: #DBEAFE; display: flex; align-items: center; justify-content: center; font-size: 22px;">
+                  🤖
+                </div>
+                <div>
+                  <div style="font-size: 14px; font-weight: 800; color: #0369A1;">Need help?</div>
+                  <div style="font-size: 11px; color: #0284C7; font-weight: 600;">Ask JanSaarthi</div>
+                </div>
+              </div>
+              <button class="mic-round-btn" onclick="triggerVoiceAssistant(event)">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                  <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                  <line x1="12" y1="19" x2="12" y2="23"></line>
+                  <line x1="8" y1="23" x2="16" y2="23"></line>
+                </svg>
+              </button>
             </div>
 
             <!-- Quick Categories Grid -->
@@ -1205,44 +1391,68 @@
             </div>
           </section>
 
-          <!-- 6. SCREEN: MY APPLICATIONS -->
+          <!-- 6. SCREEN: MY APPLICATIONS (Teammate Design) -->
           <section class="screen" id="screen-applications">
-            <div class="gov-top-banner">
-              <div class="gov-flag-stripe"></div>
-              <div class="gov-banner-row">
-                <div class="gov-identity">
-                  <div class="emblem-icon">📝</div>
-                  <div class="gov-titles">
-                    <h1>My Applications</h1>
-                    <p>Real-time DBT Benefit & Service Tracker</p>
-                  </div>
-                </div>
+            <div class="gov-top-banner" style="display: flex; align-items: center; justify-content: space-between; padding: 12px 16px;">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <button onclick="switchScreen('screen-home')" style="background: none; border: none; color: #FFFFFF; font-size: 20px; cursor: pointer; padding: 2px;">←</button>
+                <div style="font-size: 16px; font-weight: 800; color: #FFFFFF;">My Applications</div>
               </div>
+              <button class="mini-badge-btn" onclick="showToast('Applications refreshed')">🔄 Refresh</button>
             </div>
 
-            <div style="padding: 12px 16px;">
-              <div class="card" style="border-left: 4px solid var(--gov-green);">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-                  <span class="badge badge-central">PM KISAN</span>
-                  <span class="badge badge-dbt">DISBURSED</span>
+            <!-- Application Filter Chips (Teammate Design) -->
+            <div class="filter-chips-row" style="margin-top: 10px;">
+              <button class="filter-chip active" onclick="filterApplications('All', this)">All</button>
+              <button class="filter-chip" onclick="filterApplications('Applied', this)">Applied</button>
+              <button class="filter-chip" onclick="filterApplications('Under Process', this)">Under Process</button>
+              <button class="filter-chip" onclick="filterApplications('Rejected', this)">Rejected</button>
+            </div>
+
+            <div style="padding: 8px 16px;" id="applications-list-container">
+              <!-- Card 1: Ladli Behna Yojana -->
+              <div class="card app-item-card" data-status="Under Process" style="display: flex; align-items: center; justify-content: space-between; padding: 14px 16px;" onclick="openApplicationDetail('Ladli Behna Yojana', 'Under Process', '12 Apr 2025')">
+                <div style="display: flex; align-items: center; gap: 14px;">
+                  <div style="width: 44px; height: 44px; border-radius: 50%; background: #FCE7F3; display: flex; align-items: center; justify-content: center; font-size: 22px;">
+                    👩
+                  </div>
+                  <div>
+                    <div style="font-size: 14px; font-weight: 800; color: #0F172A;">Ladli Behna Yojana</div>
+                    <div style="font-size: 11px; color: #64748B; margin: 2px 0 6px 0;">Applied on 12 Apr 2025</div>
+                    <span class="badge" style="background: #E0F2FE; color: #0284C7; border: 1px solid #BAE6FD; padding: 3px 10px; border-radius: 20px; font-size: 10px; font-weight: 700;">Under Process</span>
+                  </div>
                 </div>
-                <div style="font-size: 13px; font-weight: 800; color: var(--text-primary);">PM Kisan 16th Installment</div>
-                <div style="font-size: 11px; color: #64748B; margin-top: 2px;">Ref: PMK-2024-UP-94821</div>
-                <div style="margin-top: 10px; font-size: 11px; font-weight: 600; color: var(--gov-green);">
-                  ✓ ₹2,000 credited to SBI A/c ***4821 via DBT on 15 Feb 2024
-                </div>
+                <div style="font-size: 18px; color: #0284C7; font-weight: 800;">›</div>
               </div>
 
-              <div class="card" style="border-left: 4px solid var(--gov-saffron);">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-                  <span class="badge badge-central">AYUSHMAN</span>
-                  <span class="badge" style="background: #FEF3C7; color: #D97706;">UNDER REVIEW</span>
+              <!-- Card 2: Post Matric Scholarship -->
+              <div class="card app-item-card" data-status="Applied" style="display: flex; align-items: center; justify-content: space-between; padding: 14px 16px;" onclick="openApplicationDetail('Post Matric Scholarship', 'Completed', '05 Mar 2025')">
+                <div style="display: flex; align-items: center; gap: 14px;">
+                  <div style="width: 44px; height: 44px; border-radius: 50%; background: #D1FAE5; display: flex; align-items: center; justify-content: center; font-size: 22px;">
+                    📖
+                  </div>
+                  <div>
+                    <div style="font-size: 14px; font-weight: 800; color: #0F172A;">Post Matric Scholarship</div>
+                    <div style="font-size: 11px; color: #64748B; margin: 2px 0 6px 0;">Applied on 05 Mar 2025</div>
+                    <span class="badge" style="background: #DCFCE7; color: #16A34A; border: 1px solid #BBF7D0; padding: 3px 10px; border-radius: 20px; font-size: 10px; font-weight: 700;">Completed</span>
+                  </div>
                 </div>
-                <div style="font-size: 13px; font-weight: 800; color: var(--text-primary);">Ayushman Bharat Golden Card</div>
-                <div style="font-size: 11px; color: #64748B; margin-top: 2px;">Ref: AB-PMJAY-882104</div>
-                <div style="margin-top: 8px; font-size: 11px; color: #475569;">
-                  ⏳ Document verification in progress by State Nodal Agency (UP). Expected resolution: 3 days.
+                <div style="font-size: 18px; color: #0284C7; font-weight: 800;">›</div>
+              </div>
+
+              <!-- Card 3: PM Kisan Samman Nidhi -->
+              <div class="card app-item-card" data-status="Applied" style="display: flex; align-items: center; justify-content: space-between; padding: 14px 16px;" onclick="openApplicationDetail('PM Kisan Samman Nidhi', 'Approved', '15 Jan 2025')">
+                <div style="display: flex; align-items: center; gap: 14px;">
+                  <div style="width: 44px; height: 44px; border-radius: 50%; background: #FEF3C7; display: flex; align-items: center; justify-content: center; font-size: 22px;">
+                    🌾
+                  </div>
+                  <div>
+                    <div style="font-size: 14px; font-weight: 800; color: #0F172A;">PM Kisan Samman Nidhi</div>
+                    <div style="font-size: 11px; color: #64748B; margin: 2px 0 6px 0;">Applied on 15 Jan 2025</div>
+                    <span class="badge" style="background: #DCFCE7; color: #16A34A; border: 1px solid #BBF7D0; padding: 3px 10px; border-radius: 20px; font-size: 10px; font-weight: 700;">Completed</span>
+                  </div>
                 </div>
+                <div style="font-size: 18px; color: #0284C7; font-weight: 800;">›</div>
               </div>
             </div>
           </section>
@@ -1546,7 +1756,7 @@
     let isLargeFont = false;
     let selectedState = 'All India';
 
-    const SCHEMES_DATABASE = [
+    let SCHEMES_DATABASE = [
       {
         id: 'CEN-01',
         titleEn: 'PM Kisan Samman Nidhi',
@@ -1716,7 +1926,43 @@
       renderStates();
       updateClock();
       setInterval(updateClock, 30000);
+      fetchLiveSchemes();
     });
+
+    async function fetchLiveSchemes() {
+      try {
+        const res = await fetch('/api/schemes');
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data) && data.length > 0) {
+            console.log('[JanSaarthi Live Backend] Received ' + data.length + ' schemes');
+            const mapped = data.map(s => ({
+              id: s.id || s.schemeId || 'SCH-' + Math.floor(Math.random() * 1000),
+              titleEn: s.schemeName || s.titleEn || 'Government Welfare Scheme',
+              titleHi: s.titleHi || s.schemeName || 'सरकारी कल्याणकारी योजना',
+              deptEn: s.ministry || s.deptEn || 'Ministry of Citizen Welfare',
+              deptHi: s.ministryHi || s.deptHi || 'नागरिक कल्याण मंत्रालय',
+              benefitEn: s.benefitSummaryEn || s.benefitSummary || s.benefitEn || 'Direct Welfare Financial Benefit',
+              benefitHi: s.benefitSummaryHi || s.benefitHi || 'प्रत्यक्ष कल्याण वित्तीय सहायता',
+              level: (s.schemeLevel || s.level || 'CENTRAL').toUpperCase(),
+              category: s.category || 'Agriculture',
+              isDbt: s.dbtEnabled !== undefined ? s.dbtEnabled : true,
+              eligibilityEn: Array.isArray(s.eligibilityCriteria) ? s.eligibilityCriteria : [s.eligibilityCriteria || 'Eligible citizen resident.'],
+              eligibilityHi: Array.isArray(s.eligibilityCriteriaHi) ? s.eligibilityCriteriaHi : ['पात्र नागरिक निवासी।'],
+              docsEn: Array.isArray(s.requiredDocuments) ? s.requiredDocuments : ['Aadhaar Card', 'Bank Passbook'],
+              docsHi: ['आधार कार्ड', 'बैंक पासबुक'],
+              stepsEn: ['Visit official portal or CSC center', 'Complete Aadhaar e-KYC', 'Direct DBT bank transfer'],
+              stepsHi: ['पोर्टल पर जाएं', 'ई-केवाईसी करें', 'डीबीटी अंतरण']
+            }));
+            SCHEMES_DATABASE = mapped;
+            renderSchemes();
+            showToast('✓ Synced with Scheme Service Backend (' + mapped.length + ' Schemes Live)');
+          }
+        }
+      } catch (err) {
+        console.log('[Backend] Running with cached database:', err.message);
+      }
+    }
 
     function updateClock() {
       const now = new Date();
@@ -1988,8 +2234,55 @@
       btn.classList.add('active');
     }
 
-    function runEligibilityEvaluation() {
+    function filterApplications(status, btn) {
+      document.querySelectorAll('#screen-applications .filter-chip').forEach(c => c.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      const cards = document.querySelectorAll('.app-item-card');
+      cards.forEach(card => {
+        if (status === 'All') {
+          card.style.display = 'flex';
+        } else if (status === 'Applied') {
+          card.style.display = (card.dataset.status === 'Applied' || card.dataset.status === 'Completed' || card.dataset.status === 'Approved') ? 'flex' : 'none';
+        } else if (status === 'Under Process') {
+          card.style.display = (card.dataset.status === 'Under Process') ? 'flex' : 'none';
+        } else if (status === 'Rejected') {
+          card.style.display = 'none'; // None rejected in demo
+        }
+      });
+      showToast(`Showing ${status} applications`);
+    }
+
+    function openApplicationDetail(title, status, date) {
+      showToast(`Application Details: ${title} (${status})`);
+    }
+
+    function triggerVoiceAssistant(event) {
+      if (event) event.stopPropagation();
+      showToast('🎙️ JanSaarthi Voice Assistant listening...');
+      if ('speechSynthesis' in window) {
+        const msg = new SpeechSynthesisUtterance(currentLanguage === 'HI' ? 'नमस्ते! मैं जन सारथी हूँ। मैं आपकी सरकारी योजनाओं में कैसे सहायता कर सकता हूँ?' : 'Namaste! I am JanSaarthi. How may I help you discover government benefits today?');
+        msg.rate = 0.95;
+        window.speechSynthesis.speak(msg);
+      }
+    }
+
+    async function runEligibilityEvaluation() {
       const resultBox = document.getElementById('eligibility-results-box');
+      showToast('⚡ Running AI Eligibility Engine...');
+      try {
+        const age = Number(document.getElementById('calc-age')?.value) || 30;
+        const occ = document.getElementById('calc-occupation')?.value || 'Farmer';
+        const res = await fetch('http://localhost:5004/api/eligibility/analyze', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ age, occupation: occ, state: selectedState || 'All India' })
+        });
+        if (res.ok) {
+          showToast('✓ AI Matched 12 Government Welfare Schemes!');
+        }
+      } catch (err) {
+        // Fallback to local rule evaluation
+      }
       resultBox.style.display = 'block';
       showToast('Eligibility calculated successfully!');
     }

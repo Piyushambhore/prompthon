@@ -1,0 +1,13 @@
+{
+  "name": "jansaarthi-platform",
+  "version": "1.0.0",
+  "description": "JanSaarthi - AI-Powered Citizen Welfare and Entitlement Platform",
+  "main": "dev-server.js",
+  "scripts": {
+    "dev": "node dev-server.js",
+    "start": "node dev-server.js",
+    "preview": "node dev-server.js"
+  },
+  "author": "JanSaarthi Team",
+  "license": "MIT"
+}

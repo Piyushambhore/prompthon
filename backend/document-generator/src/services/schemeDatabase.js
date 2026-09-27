@@ -442,6 +442,18 @@ const SCHEMES_DOCUMENTS_DB = {
   }
 };
 
+const SCHEME_ALIASES = {
+  'sch001': 'post-matric-scholarship',
+  'sch002': 'pmay',
+  'sch003': 'ayushman-bharat',
+  'sch004': 'pm-mudra',
+  'sch005': 'pm-kisan',
+  'sch011': 'ayushman-bharat',
+  'sch019': 'pm-mudra',
+  'sch021': 'pmay',
+  'sch022': 'pmay'
+};
+
 /**
  * Normalizes scheme ID
  */
@@ -451,11 +463,11 @@ function normalizeSchemeId(id) {
 }
 
 /**
- * Checks if scheme exists in database
+ * Checks if scheme exists in database or alias mapping
  */
 function hasScheme(schemeId) {
   const norm = normalizeSchemeId(schemeId);
-  return Boolean(SCHEMES_DOCUMENTS_DB[norm]);
+  return Boolean(SCHEMES_DOCUMENTS_DB[norm] || SCHEMES_DOCUMENTS_DB[SCHEME_ALIASES[norm]]);
 }
 
 /**
@@ -463,7 +475,14 @@ function hasScheme(schemeId) {
  */
 function getSchemeDocConfig(schemeId) {
   const norm = normalizeSchemeId(schemeId);
-  return SCHEMES_DOCUMENTS_DB[norm] || null;
+  if (SCHEMES_DOCUMENTS_DB[norm]) {
+    return SCHEMES_DOCUMENTS_DB[norm];
+  }
+  const aliasTarget = SCHEME_ALIASES[norm];
+  if (aliasTarget && SCHEMES_DOCUMENTS_DB[aliasTarget]) {
+    return SCHEMES_DOCUMENTS_DB[aliasTarget];
+  }
+  return null;
 }
 
 /**
@@ -475,6 +494,7 @@ function getAllSchemeIds() {
 
 module.exports = {
   SCHEMES_DOCUMENTS_DB,
+  SCHEME_ALIASES,
   hasScheme,
   getSchemeDocConfig,
   getAllSchemeIds,

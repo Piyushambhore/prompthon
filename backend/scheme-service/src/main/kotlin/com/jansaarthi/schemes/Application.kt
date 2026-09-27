@@ -37,11 +37,11 @@ fun main() {
         ignoreIfMissing = true
     }
 
-    val port       = env["PORT"]?.toIntOrNull() ?: 8080
-    val dbUrl      = env["DATABASE_URL"]      ?: "jdbc:postgresql://localhost:5432/jansaarthi"
-    val dbUser     = env["DATABASE_USER"]      ?: "postgres"
-    val dbPassword = env["DATABASE_PASSWORD"]  ?: "postgres"
-    val aiApiKey   = env["AI_API_KEY"]
+    val port       = System.getenv("PORT")?.toIntOrNull() ?: env["PORT"]?.toIntOrNull() ?: 8080
+    val dbUrl      = System.getenv("DATABASE_URL") ?: env["DATABASE_URL"] ?: "jdbc:postgresql://localhost:5432/jansaarthi"
+    val dbUser     = System.getenv("DATABASE_USER") ?: env["DATABASE_USER"] ?: "postgres"
+    val dbPassword = System.getenv("DATABASE_PASSWORD") ?: env["DATABASE_PASSWORD"] ?: "postgres"
+    val aiApiKey   = System.getenv("AI_API_KEY") ?: env["AI_API_KEY"]
 
     // ── Initialise database & seed demo data ───────────────────────
     DatabaseConfig.init(dbUrl, dbUser, dbPassword)
@@ -66,7 +66,7 @@ fun main() {
     val profileService      = ProfileService(digiLockerService, farmerService)
 
     // ── Start Ktor ─────────────────────────────────────────────────
-    embeddedServer(Netty, port = port) {
+    embeddedServer(Netty, port = port, host = "0.0.0.0") {
         configurePlugins()
         configureRouting(
             schemeRepository,
@@ -92,8 +92,15 @@ fun Application.configurePlugins() {
     }
 
     install(CORS) {
+        anyHost()                                  // Allows mobile app & cloud deployments
         allowHost("localhost:3000")                // Dev frontend
+        allowHost("localhost:5173")                // Alternate Vite dev frontend
+        allowHost("127.0.0.1:3000")
+        allowHost("127.0.0.1:5173")
         allowHost("localhost:5001")                // Eligibility analyzer micro-service
+        allowHost("localhost:5002")                // Language service
+        allowHost("localhost:5003")                // Document generator
+        allowHost("localhost:5004")                // Scheme ingestion
         allowHeader(HttpHeaders.ContentType)
         allowHeader(HttpHeaders.Authorization)
         allowMethod(HttpMethod.Get)

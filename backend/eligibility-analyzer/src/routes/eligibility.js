@@ -10,8 +10,8 @@ const { checkEligibility, analyzeRejection } = require('../services/llmService')
  */
 router.post('/check-eligibility', llmRateLimiter, validateCheckEligibility, async (req, res) => {
   try {
-    const { schemeId, userProfile } = req.body;
-    const result = await checkEligibility(schemeId, userProfile);
+    const { schemeId, userProfile, userDocuments } = req.body;
+    const result = await checkEligibility(schemeId, userProfile, userDocuments);
     return res.status(200).json(result);
   } catch (error) {
     console.error('Error during eligibility evaluation:', error);

@@ -1,0 +1,120 @@
+# ==============================================================================
+# JanSaarthi (GSGP) — Production Infrastructure Blueprint for Render
+# ==============================================================================
+version: "1"
+
+databases:
+  # ─── 0. Managed PostgreSQL Database ─────────────────────────────────────────
+  - name: jansaarthi-db
+    databaseName: jansaarthi
+    user: jansaarthi_admin
+    region: singapore # Lowest latency for Indian citizen traffic
+    plan: free
+    ipAllowList: [] # Deny public internet access; Render VPC internal only
+
+services:
+  # ─── 1. Public Gateway API — Scheme Service (Kotlin / Ktor) ────────────────
+  - type: web
+    name: jansaarthi-api
+    runtime: docker
+    dockerfilePath: backend/scheme-service/Dockerfile
+    dockerContext: backend/scheme-service
+    region: singapore
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: 8080
+      - key: DATABASE_URL
+        fromDatabase:
+          name: jansaarthi-db
+          property: connectionString
+      - key: AI_API_KEY
+        sync: false # Set in Render Dashboard (optional)
+      # Internal Private Service VPC DNS Routes
+      - key: ELIGIBILITY_SERVICE_URL
+        value: http://jansaarthi-analyzer:5001
+      - key: LANGUAGE_SERVICE_URL
+        value: http://jansaarthi-language:5002
+      - key: DOCUMENT_SERVICE_URL
+        value: http://jansaarthi-documents:5003
+      - key: CORS_ALLOWED_ORIGINS
+        value: "*" # Permits Android App and Citizen Web Portal
+
+  # ─── 2. Internal Microservice — Eligibility Analyzer (Node.js) ─────────────
+  - type: pserv
+    name: jansaarthi-analyzer
+    runtime: node
+    rootDir: backend/eligibility-analyzer
+    region: singapore
+    plan: free
+    buildCommand: npm ci --omit=dev
+    startCommand: node src/index.js
+    envVars:
+      - key: PORT
+        value: 5001
+      - key: NODE_ENV
+        value: production
+      - key: CORS_ORIGIN
+        value: "*"
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: CLAUDE_API_KEY
+        sync: false
+
+  # ─── 3. Internal Microservice — Language Service (Node.js) ──────────────────
+  - type: pserv
+    name: jansaarthi-language
+    runtime: node
+    rootDir: backend/language-service
+    region: singapore
+    plan: free
+    buildCommand: npm ci --omit=dev
+    startCommand: node src/index.js
+    envVars:
+      - key: PORT
+        value: 5002
+      - key: NODE_ENV
+        value: production
+      - key: CORS_ORIGIN
+        value: "*"
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: BHASHINI_API_KEY
+        sync: false
+
+  # ─── 4. Internal Microservice — Document Generator (Node.js) ────────────────
+  - type: pserv
+    name: jansaarthi-documents
+    runtime: node
+    rootDir: backend/document-generator
+    region: singapore
+    plan: free
+    buildCommand: npm ci --omit=dev
+    startCommand: node src/index.js
+    envVars:
+      - key: PORT
+        value: 5003
+      - key: NODE_ENV
+        value: production
+      - key: CORS_ORIGIN
+        value: "*"
+
+  # ─── 5. Internal Microservice — Scheme Ingestion Pipeline (Node.js) ─────────
+  - type: pserv
+    name: jansaarthi-ingestion
+    runtime: node
+    rootDir: backend/scheme-ingestion
+    region: singapore
+    plan: free
+    buildCommand: npm ci --omit=dev
+    startCommand: node src/index.js
+    envVars:
+      - key: PORT
+        value: 5004
+      - key: NODE_ENV
+        value: production
+      - key: CORS_ORIGIN
+        value: "*"
+      - key: SCHEME_SERVICE_URL
+        value: http://jansaarthi-api:8080

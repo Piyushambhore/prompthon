@@ -35,14 +35,18 @@ function validateTranslationRequest(req, res, next) {
     });
   }
 
-  // Validate context
+  // Validate context (with synonym fallback mapping)
   if (!context || typeof context !== 'string') {
     return res.status(400).json({
       error: 'Invalid or missing "context". It must be a string.'
     });
   }
 
-  const normalizedContext = context.toLowerCase().trim();
+  let normalizedContext = context.toLowerCase().trim();
+  if (['scheme_benefit', 'general', 'guidance', 'overview'].includes(normalizedContext)) {
+    normalizedContext = 'eligibility';
+  }
+
   if (!SUPPORTED_CONTEXTS.includes(normalizedContext)) {
     const allowedContexts = SUPPORTED_CONTEXTS.join(', ');
     return res.status(400).json({

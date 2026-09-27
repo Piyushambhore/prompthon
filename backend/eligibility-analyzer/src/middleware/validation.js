@@ -16,14 +16,35 @@ function validateCheckEligibility(req, res, next) {
     });
   }
 
+  // Normalize schemeId aliases if provided from scheme-service
+  const SCHEME_ALIASES = {
+    'sch001': 'post-matric-scholarship',
+    'sch002': 'pmay',
+    'sch003': 'ayushman-bharat',
+    'sch004': 'pm-mudra',
+    'sch005': 'pm-kisan',
+    'sch011': 'ayushman-bharat',
+    'sch019': 'pm-mudra',
+    'sch021': 'pmay',
+    'sch022': 'pmay'
+  };
+  const normSchemeKey = schemeId.toLowerCase().trim();
+  if (SCHEME_ALIASES[normSchemeKey]) {
+    req.body.schemeId = SCHEME_ALIASES[normSchemeKey];
+  }
+
+  // Support both annualIncome and income
+  let incomeVal = userProfile.income !== undefined ? userProfile.income : userProfile.annualIncome;
+  // Support both occupation and employmentStatus
+  let empStatus = userProfile.employmentStatus || userProfile.occupation || 'Employed';
+  // Support optional educationLevel and gender with defaults
+  let eduLevel = userProfile.educationLevel || 'Not Specified';
+  let genderVal = userProfile.gender || 'Any';
+
   const {
     age,
-    income,
-    educationLevel,
     caste,
-    gender,
     state,
-    employmentStatus,
     additionalDetails
   } = userProfile;
 
@@ -33,15 +54,9 @@ function validateCheckEligibility(req, res, next) {
     });
   }
 
-  if (typeof income !== 'number' || isNaN(income) || income < 0) {
+  if (typeof incomeVal !== 'number' || isNaN(incomeVal) || incomeVal < 0) {
     return res.status(400).json({
       error: 'Invalid or missing "userProfile.income". It must be a non-negative number.'
-    });
-  }
-
-  if (!educationLevel || typeof educationLevel !== 'string' || educationLevel.trim() === '') {
-    return res.status(400).json({
-      error: 'Invalid or missing "userProfile.educationLevel". It must be a non-empty string.'
     });
   }
 
@@ -51,21 +66,9 @@ function validateCheckEligibility(req, res, next) {
     });
   }
 
-  if (!gender || typeof gender !== 'string' || gender.trim() === '') {
-    return res.status(400).json({
-      error: 'Invalid or missing "userProfile.gender". It must be a non-empty string.'
-    });
-  }
-
   if (!state || typeof state !== 'string' || state.trim() === '') {
     return res.status(400).json({
       error: 'Invalid or missing "userProfile.state". It must be a non-empty string.'
-    });
-  }
-
-  if (!employmentStatus || typeof employmentStatus !== 'string' || employmentStatus.trim() === '') {
-    return res.status(400).json({
-      error: 'Invalid or missing "userProfile.employmentStatus". It must be a non-empty string.'
     });
   }
 
@@ -74,6 +77,14 @@ function validateCheckEligibility(req, res, next) {
       error: '"userProfile.additionalDetails" must be an object.'
     });
   }
+
+  // Populate normalized fields on userProfile
+  userProfile.income = incomeVal;
+  userProfile.annualIncome = incomeVal;
+  userProfile.employmentStatus = empStatus;
+  userProfile.occupation = empStatus;
+  userProfile.educationLevel = eduLevel;
+  userProfile.gender = genderVal;
 
   next();
 }

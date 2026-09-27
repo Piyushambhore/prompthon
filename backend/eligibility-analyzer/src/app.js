@@ -6,10 +6,10 @@ const eligibilityRoutes = require('./routes/eligibility');
 
 const app = express();
 
-// Configure CORS restricted to http://localhost:3000 only
+// Configure CORS allowed origins (frontend dev ports)
 const allowedOrigins = process.env.CORS_ORIGIN 
   ? process.env.CORS_ORIGIN.split(',').map(s => s.trim()) 
-  : ['http://localhost:3000'];
+  : ['http://localhost:3000', 'http://localhost:5173', 'http://127.0.0.1:3000', 'http://127.0.0.1:5173'];
 
 app.use(cors({
   origin: function (origin, callback) {
@@ -29,8 +29,10 @@ app.use(cors({
 app.use(express.json({ limit: '2mb' }));
 app.use(express.urlencoded({ extended: true, limit: '2mb' }));
 
-// Health check endpoint at root /health
+// Health check endpoint at root /health and /api/health
 app.use('/', healthRoutes);
+app.use('/api', healthRoutes);
+app.get('/api', (req, res) => res.status(200).json({ status: 'ok', service: 'eligibility-analyzer' }));
 
 // API routes mounted at /api
 app.use('/api', eligibilityRoutes);

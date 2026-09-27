@@ -565,6 +565,7 @@ fun AllSchemesScreen(
     onFontScaleToggle: () -> Unit = {},
     onNavigateBack: () -> Unit = {},
     onNavigateHome: () -> Unit = {},
+    onNavigateSchemes: () -> Unit = {},
     onNavigateApplications: () -> Unit = {},
     onNavigateDocuments: () -> Unit = {},
     onNavigateProfile: () -> Unit = {},
@@ -667,7 +668,7 @@ fun AllSchemesScreen(
                 selectedTab = 1,
                 currentLanguage = currentLanguage,
                 onNavigateHome = onNavigateHome,
-                onNavigateSchemes = { /* already here */ },
+                onNavigateSchemes = onNavigateSchemes,
                 onNavigateApplications = onNavigateApplications,
                 onNavigateDocuments = onNavigateDocuments,
                 onNavigateProfile = onNavigateProfile
